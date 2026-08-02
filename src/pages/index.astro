@@ -1,132 +1,90 @@
 ---
-const algorithms = [
-  { id: 'bubble', label: 'Bubble Sort', category: 'Ordenação', complexity: 'O(n²)' },
-  { id: 'selection', label: 'Selection Sort', category: 'Ordenação', complexity: 'O(n²)' },
-  { id: 'insertion', label: 'Insertion Sort', category: 'Ordenação', complexity: 'O(n²)' },
-  { id: 'binary', label: 'Busca Binária', category: 'Busca', complexity: 'O(log n)' }
-];
+const algorithms = [{"id": "alg-0", "category": "sorting", "name": "Bubble Sort", "complexity": "O(n²)", "description": "Visualização interativa de Bubble Sort."}, {"id": "alg-1", "category": "sorting", "name": "Selection Sort", "complexity": "O(n²)", "description": "Visualização interativa de Selection Sort."}, {"id": "alg-2", "category": "sorting", "name": "Insertion Sort", "complexity": "O(n²)", "description": "Visualização interativa de Insertion Sort."}, {"id": "alg-3", "category": "sorting", "name": "Merge Sort", "complexity": "O(n log n)", "description": "Visualização interativa de Merge Sort."}, {"id": "alg-4", "category": "sorting", "name": "Quick Sort", "complexity": "O(n log n)", "description": "Visualização interativa de Quick Sort."}, {"id": "alg-5", "category": "search", "name": "Busca Linear", "complexity": "O(n)", "description": "Visualização interativa de Busca Linear."}, {"id": "alg-6", "category": "search", "name": "Busca Binária", "complexity": "O(log n)", "description": "Visualização interativa de Busca Binária."}, {"id": "alg-7", "category": "search", "name": "Jump Search", "complexity": "O(√n)", "description": "Visualização interativa de Jump Search."}, {"id": "alg-8", "category": "search", "name": "Interpolation Search", "complexity": "O(log log n)", "description": "Visualização interativa de Interpolation Search."}, {"id": "alg-9", "category": "search", "name": "Exponential Search", "complexity": "O(log n)", "description": "Visualização interativa de Exponential Search."}, {"id": "alg-10", "category": "structures", "name": "Pilha", "complexity": "O(1)", "description": "Visualização interativa de Pilha."}, {"id": "alg-11", "category": "structures", "name": "Fila", "complexity": "O(1)", "description": "Visualização interativa de Fila."}, {"id": "alg-12", "category": "structures", "name": "Lista Ligada", "complexity": "O(n)", "description": "Visualização interativa de Lista Ligada."}, {"id": "alg-13", "category": "structures", "name": "Árvore Binária", "complexity": "O(log n)", "description": "Visualização interativa de Árvore Binária."}, {"id": "alg-14", "category": "structures", "name": "Heap", "complexity": "O(log n)", "description": "Visualização interativa de Heap."}, {"id": "alg-15", "category": "graphs", "name": "BFS", "complexity": "O(V+E)", "description": "Visualização interativa de BFS."}, {"id": "alg-16", "category": "graphs", "name": "DFS", "complexity": "O(V+E)", "description": "Visualização interativa de DFS."}, {"id": "alg-17", "category": "graphs", "name": "Dijkstra", "complexity": "O((V+E) log V)", "description": "Visualização interativa de Dijkstra."}, {"id": "alg-18", "category": "graphs", "name": "A*", "complexity": "Variável", "description": "Visualização interativa de A*."}, {"id": "alg-19", "category": "graphs", "name": "Kruskal", "complexity": "O(E log E)", "description": "Visualização interativa de Kruskal."}, {"id": "alg-20", "category": "recursion", "name": "Fatorial", "complexity": "O(n)", "description": "Visualização interativa de Fatorial."}, {"id": "alg-21", "category": "recursion", "name": "Fibonacci Recursivo", "complexity": "O(2ⁿ)", "description": "Visualização interativa de Fibonacci Recursivo."}, {"id": "alg-22", "category": "recursion", "name": "Torre de Hanói", "complexity": "O(2ⁿ)", "description": "Visualização interativa de Torre de Hanói."}, {"id": "alg-23", "category": "recursion", "name": "Percurso em Árvore", "complexity": "O(n)", "description": "Visualização interativa de Percurso em Árvore."}, {"id": "alg-24", "category": "recursion", "name": "Backtracking", "complexity": "Exponencial", "description": "Visualização interativa de Backtracking."}, {"id": "alg-25", "category": "dp", "name": "Mochila 0/1", "complexity": "O(nW)", "description": "Visualização interativa de Mochila 0/1."}, {"id": "alg-26", "category": "dp", "name": "Maior Subsequência Comum", "complexity": "O(nm)", "description": "Visualização interativa de Maior Subsequência Comum."}, {"id": "alg-27", "category": "dp", "name": "Troco de Moedas", "complexity": "O(n·valor)", "description": "Visualização interativa de Troco de Moedas."}, {"id": "alg-28", "category": "dp", "name": "Fibonacci DP", "complexity": "O(n)", "description": "Visualização interativa de Fibonacci DP."}, {"id": "alg-29", "category": "dp", "name": "Maior Subsequência Crescente", "complexity": "O(n²)", "description": "Visualização interativa de Maior Subsequência Crescente."}];
+const categories = {"sorting": "Ordenação", "search": "Busca", "structures": "Estruturas de dados", "graphs": "Grafos", "recursion": "Recursão", "dp": "Programação dinâmica"};
 ---
-<!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="description" content="MITLicense: visualizador interativo de algoritmos executado diretamente no navegador." />
-    <title>MITLicense | Visualizador de Algoritmos</title>
-    <style>
-      :root { --paper:#f3f0e8; --ink:#171915; --muted:#696b63; --line:#c9c6bc; --mint:#b9f3d0; --yellow:#f9dd6c; --blue:#b9dafa; --peach:#f7c7aa; --dark:#20231f; }
-      * { box-sizing:border-box; }
-      html { scroll-behavior:smooth; }
-      body { margin:0; background:var(--paper); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
-      button, input, select { font:inherit; }
-      button { cursor:pointer; }
-      .wrap { width:min(1180px, calc(100% - 32px)); margin:auto; }
-      header { border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20; background:rgba(243,240,232,.94); backdrop-filter:blur(12px); }
-      .topbar { min-height:70px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
-      .brand { color:var(--ink); font-weight:900; letter-spacing:-.04em; text-decoration:none; font-size:1.2rem; }
-      .brand span { color:#16864d; }
-      nav { display:flex; gap:10px; align-items:center; }
-      nav a { color:var(--ink); text-decoration:none; font-weight:750; padding:10px 14px; border:1px solid transparent; }
-      nav a:hover { border-color:var(--ink); }
-      .hero { padding:72px 0 52px; display:grid; grid-template-columns:1.15fr .85fr; gap:40px; align-items:end; }
-      .eyebrow { font-size:.75rem; font-weight:900; letter-spacing:.16em; margin:0 0 18px; }
-      h1 { margin:0; font-size:clamp(3.2rem, 8vw, 7rem); line-height:.84; letter-spacing:-.075em; max-width:850px; }
-      h1 em { font-family:Georgia, serif; font-weight:400; }
-      .hero-copy { color:var(--muted); font-size:1.12rem; line-height:1.65; max-width:520px; margin:0; }
-      .hero-badge { border:1px solid var(--ink); padding:22px; background:var(--yellow); transform:rotate(2deg); box-shadow:7px 7px 0 var(--ink); }
-      .hero-badge strong { display:block; font-size:2.4rem; letter-spacing:-.05em; }
-      .hero-badge span { font-weight:800; }
-      .workspace { border-top:1px solid var(--line); padding:38px 0 70px; display:grid; grid-template-columns:300px minmax(0,1fr); gap:22px; }
-      .sidebar, .panel { border:1px solid var(--ink); background:#faf8f2; box-shadow:5px 5px 0 var(--ink); }
-      .sidebar { padding:18px; align-self:start; position:sticky; top:92px; }
-      .sidebar h2 { margin:2px 0 14px; font-size:.78rem; letter-spacing:.14em; }
-      .algorithm-list { display:grid; gap:9px; }
-      .algorithm-button { text-align:left; border:1px solid var(--line); background:transparent; padding:14px; display:grid; gap:4px; }
-      .algorithm-button strong { font-size:1rem; }
-      .algorithm-button small { color:var(--muted); }
-      .algorithm-button.active { background:var(--mint); border-color:var(--ink); transform:translateX(3px); }
-      .tip { margin:20px 0 0; padding:14px; background:var(--blue); line-height:1.45; font-size:.88rem; border:1px solid var(--ink); }
-      .panel { min-width:0; }
-      .panel-head { padding:22px; border-bottom:1px solid var(--ink); display:flex; justify-content:space-between; gap:20px; align-items:flex-start; }
-      .panel-head h2 { margin:3px 0 4px; font-size:clamp(1.6rem,4vw,2.8rem); letter-spacing:-.045em; }
-      .panel-head p { margin:0; color:var(--muted); }
-      .complexity { padding:9px 12px; background:var(--peach); border:1px solid var(--ink); font-weight:900; white-space:nowrap; }
-      .controls { padding:16px 22px; border-bottom:1px solid var(--line); display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
-      .controls button, .controls select, .controls input { min-height:42px; border:1px solid var(--ink); background:var(--paper); padding:9px 13px; font-weight:750; }
-      .controls .primary { background:var(--dark); color:white; }
-      .controls .accent { background:var(--yellow); }
-      .controls label { display:flex; align-items:center; gap:8px; font-size:.85rem; font-weight:800; }
-      .controls input[type=range] { padding:0; width:120px; min-height:auto; border:0; }
-      .visual-stage { min-height:430px; padding:34px 24px 20px; display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden; }
-      .bars { height:310px; display:flex; align-items:flex-end; gap:clamp(3px, 1vw, 12px); border-bottom:2px solid var(--ink); padding:0 4px; }
-      .bar { flex:1; min-width:5px; background:var(--blue); border:1px solid var(--ink); position:relative; transition:height .6s ease, background .15s, transform .15s; }
-      .bar::after { content:attr(data-value); position:absolute; top:-24px; left:50%; transform:translateX(-50%); font-size:.72rem; font-weight:900; }
-      .bar.comparing { background:var(--yellow); transform:translateY(-7px); }
-      .bar.active { background:var(--peach); }
-      .bar.sorted { background:var(--mint); }
-      .bar.faded { opacity:.28; }
-      .bar.found { background:var(--mint); transform:translateY(-12px); }
-      .status { min-height:58px; padding:17px 22px; margin:0; border-top:1px solid var(--line); font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-weight:700; background:#eeece4; }
-      .code-grid { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--ink); }
-      .code, .explanation { padding:22px; min-height:245px; }
-      .code { background:var(--dark); color:#eae9e2; overflow:auto; }
-      .code pre { margin:0; font-size:.82rem; line-height:1.65; white-space:pre-wrap; }
-      .explanation { border-left:1px solid var(--ink); }
-      .explanation h3 { margin-top:0; font-size:1rem; letter-spacing:.08em; }
-      .explanation ol { padding-left:20px; line-height:1.65; color:var(--muted); }
-      footer { border-top:1px solid var(--line); padding:28px 0 42px; color:var(--muted); }
-      @media (max-width:850px) { .hero { grid-template-columns:1fr; } .hero-badge { max-width:360px; } .workspace { grid-template-columns:1fr; } .sidebar { position:static; } .algorithm-list { grid-template-columns:repeat(2,1fr); } .code-grid { grid-template-columns:1fr; } .explanation { border-left:0; border-top:1px solid var(--ink); } }
-      @media (max-width:540px) { .wrap { width:min(100% - 20px,1180px); } .topbar { min-height:60px; } nav a:first-child { display:none; } .hero { padding-top:48px; } .algorithm-list { grid-template-columns:1fr; } .panel-head { flex-direction:column; } .visual-stage { padding-left:10px; padding-right:10px; min-height:360px; } .bars { height:250px; gap:3px; } .bar::after { display:none; } .controls { padding:12px; } }
-    </style>
-  </head>
-  <body>
-    <header><div class="topbar wrap"><a class="brand" href="/">MIT<span>LICENSE</span></a><nav><a href="#laboratorio">Laboratório</a><a href="https://github.com/vladicho/mitlicense" target="_blank" rel="noreferrer">GitHub ↗</a></nav></div></header>
-    <main>
-      <section class="hero wrap">
-        <div><p class="eyebrow">LABORATÓRIO INTERATIVO</p><h1>Veja o algoritmo <em>pensar.</em></h1></div>
-        <div><p class="hero-copy">Escolha um algoritmo, controle a velocidade e acompanhe comparações, trocas e decisões diretamente no navegador.</p><div class="hero-badge"><strong>100%</strong><span>JavaScript · sem backend</span></div></div>
-      </section>
-      <section id="laboratorio" class="workspace wrap">
-        <aside class="sidebar"><h2>ALGORITMOS</h2><div class="algorithm-list">{algorithms.map((algorithm, index) => <button class:list={['algorithm-button', { active:index===0 }]} data-algorithm={algorithm.id} type="button"><strong>{algorithm.label}</strong><small>{algorithm.category} · {algorithm.complexity}</small></button>)}</div><p class="tip"><strong>Dica:</strong> use “Passo” para observar cada decisão sem animação automática.</p></aside>
-        <article class="panel">
-          <div class="panel-head"><div><small id="category">ORDENAÇÃO</small><h2 id="algorithm-title">Bubble Sort</h2><p id="algorithm-description">Compara pares vizinhos e troca os valores que estão fora de ordem.</p></div><span id="complexity" class="complexity">O(n²)</span></div>
-          <div class="controls"><button id="randomize" class="accent" type="button">Nova lista</button><button id="step" type="button">Passo</button><button id="play" class="primary" type="button">▶ Executar</button><button id="reset" type="button">Reiniciar</button><label>Velocidade <input id="speed" type="range" min="80" max="900" value="420" step="20" /></label><label id="target-wrap" hidden>Buscar <input id="target" type="number" min="1" max="99" value="42" /></label></div>
-          <div class="visual-stage"><div id="bars" class="bars" aria-label="Visualização do algoritmo"></div></div>
-          <p id="status" class="status" aria-live="polite">Pronto. Escolha “Executar” ou avance um passo.</p>
-          <div class="code-grid"><div class="code"><pre id="code"></pre></div><div class="explanation"><h3>COMO FUNCIONA</h3><ol id="steps"></ol></div></div>
-        </article>
-      </section>
-    </main>
-    <footer><div class="wrap">MITLicense · visualizador de algoritmos executado localmente no navegador · código sob licença MIT.</div></footer>
-    <script is:inline>
-      const info = {
-        bubble:{ title:'Bubble Sort', category:'ORDENAÇÃO', complexity:'O(n²)', description:'Compara pares vizinhos e troca os valores que estão fora de ordem.', code:`para i de 0 até n - 1\n  para j de 0 até n - i - 2\n    se lista[j] > lista[j + 1]\n      troque lista[j] e lista[j + 1]`, steps:['Percorre a lista várias vezes.','Compara dois valores vizinhos.','Troca quando o valor da esquerda é maior.','Ao fim de cada rodada, o maior valor fica no lugar certo.'] },
-        selection:{ title:'Selection Sort', category:'ORDENAÇÃO', complexity:'O(n²)', description:'Procura o menor valor restante e coloca-o na próxima posição.', code:`para i de 0 até n - 1\n  menor = i\n  para j de i + 1 até n - 1\n    se lista[j] < lista[menor]\n      menor = j\n  troque lista[i] e lista[menor]`, steps:['Define a primeira posição ainda não ordenada.','Procura o menor valor no trecho restante.','Guarda o índice desse menor valor.','Troca-o com a primeira posição livre.'] },
-        insertion:{ title:'Insertion Sort', category:'ORDENAÇÃO', complexity:'O(n²)', description:'Insere cada item no ponto correto da parte já ordenada.', code:`para i de 1 até n - 1\n  chave = lista[i]\n  j = i - 1\n  enquanto j >= 0 e lista[j] > chave\n    lista[j + 1] = lista[j]\n    j = j - 1\n  lista[j + 1] = chave`, steps:['Considera o primeiro item como ordenado.','Retira o próximo item como chave.','Move para a direita os valores maiores.','Insere a chave na posição correta.'] },
-        binary:{ title:'Busca Binária', category:'BUSCA', complexity:'O(log n)', description:'Divide uma lista ordenada ao meio até encontrar o valor desejado.', code:`inicio = 0\nfim = n - 1\nenquanto inicio <= fim\n  meio = (inicio + fim) / 2\n  se lista[meio] == alvo: encontrou\n  senão se lista[meio] < alvo: inicio = meio + 1\n  senão: fim = meio - 1`, steps:['A lista precisa estar ordenada.','Compara o alvo com o valor central.','Descarta metade da lista a cada comparação.','Repete até encontrar o alvo ou esgotar o intervalo.'] }
-      };
-      let values=[], original=[], algorithm='bubble', actions=[], cursor=0, playing=false, timer=null;
-      const $=id=>document.getElementById(id);
-      const bars=$('bars'), status=$('status'), play=$('play');
-      function randomValues(){ return Array.from({length: innerWidth<540?10:14},()=>Math.floor(Math.random()*88)+10); }
-      function render(state={}){ bars.innerHTML=''; const max=Math.max(...values); values.forEach((v,i)=>{ const el=document.createElement('div'); el.className='bar'; el.style.height=`${Math.max(10,(v/max)*100)}%`; el.dataset.value=v; if((state.compare||[]).includes(i)) el.classList.add('comparing'); if((state.active||[]).includes(i)) el.classList.add('active'); if((state.sorted||[]).includes(i)) el.classList.add('sorted'); if((state.faded||[]).includes(i)) el.classList.add('faded'); if(state.found===i) el.classList.add('found'); bars.appendChild(el); }); }
-      function bubbleActions(arr){ const a=[...arr], out=[]; for(let i=0;i<a.length;i++){ for(let j=0;j<a.length-i-1;j++){ out.push({type:'compare',idx:[j,j+1],text:`Comparando ${a[j]} e ${a[j+1]}.`}); if(a[j]>a[j+1]){ [a[j],a[j+1]]=[a[j+1],a[j]]; out.push({type:'set',values:[...a],idx:[j,j+1],text:`Trocando: ${a[j]} vem antes de ${a[j+1]}.`}); } } out.push({type:'sorted',sorted:Array.from({length:i+1},(_,k)=>a.length-1-k),text:`${a[a.length-1-i]} chegou à posição final.`}); } return out; }
-      function selectionActions(arr){ const a=[...arr],out=[]; for(let i=0;i<a.length;i++){ let min=i; for(let j=i+1;j<a.length;j++){ out.push({type:'compare',idx:[min,j],text:`Procurando o menor: ${a[min]} × ${a[j]}.`}); if(a[j]<a[min]) min=j; } if(min!==i){ [a[i],a[min]]=[a[min],a[i]]; out.push({type:'set',values:[...a],idx:[i,min],text:`Movendo ${a[i]} para a posição ${i+1}.`}); } out.push({type:'sorted',sorted:Array.from({length:i+1},(_,k)=>k),text:`Posição ${i+1} concluída.`}); } return out; }
-      function insertionActions(arr){ const a=[...arr],out=[]; for(let i=1;i<a.length;i++){ const key=a[i]; let j=i-1; out.push({type:'compare',idx:[i],text:`Inserindo a chave ${key}.`}); while(j>=0&&a[j]>key){ a[j+1]=a[j]; out.push({type:'set',values:[...a],idx:[j,j+1],text:`Deslocando ${a[j]} para a direita.`}); j--; } a[j+1]=key; out.push({type:'set',values:[...a],idx:[j+1],sorted:Array.from({length:i+1},(_,k)=>k),text:`${key} inserido na posição correta.`}); } return out; }
-      function binaryActions(arr,target){ const a=[...arr].sort((x,y)=>x-y),out=[{type:'set',values:a,text:'Lista ordenada para iniciar a busca.'}]; let l=0,r=a.length-1; while(l<=r){ const m=Math.floor((l+r)/2), faded=a.map((_,i)=>i).filter(i=>i<l||i>r); out.push({type:'search',idx:[m],faded,text:`Meio: ${a[m]}. Comparando com ${target}.`}); if(a[m]===target){ out.push({type:'found',found:m,faded,text:`Encontrado: ${target} na posição ${m+1}.`}); return out; } if(a[m]<target) l=m+1; else r=m-1; } out.push({type:'notfound',faded:a.map((_,i)=>i),text:`${target} não está na lista.`}); return out; }
-      function prepare(){ values=[...original]; cursor=0; playing=false; clearTimeout(timer); play.textContent='▶ Executar'; const target=Number($('target').value); actions=algorithm==='bubble'?bubbleActions(values):algorithm==='selection'?selectionActions(values):algorithm==='insertion'?insertionActions(values):binaryActions(values,target); render(); status.textContent='Pronto. Escolha “Executar” ou avance um passo.'; }
-      function apply(action){ if(action.values) values=[...action.values]; render({compare:action.idx,active:action.idx,sorted:action.sorted,faded:action.faded,found:action.found}); status.textContent=action.text; }
-      function next(){ if(cursor>=actions.length){ playing=false; play.textContent='▶ Executar'; render({sorted:algorithm==='binary'?[]:values.map((_,i)=>i)}); status.textContent=algorithm==='binary'?status.textContent:'Concluído: lista ordenada.'; return false; } apply(actions[cursor++]); return true; }
-      function loop(){ if(!playing)return; if(next()) timer=setTimeout(loop,980-Number($('speed').value)); }
-      function select(id){ algorithm=id; document.querySelectorAll('.algorithm-button').forEach(b=>b.classList.toggle('active',b.dataset.algorithm===id)); const item=info[id]; $('algorithm-title').textContent=item.title; $('category').textContent=item.category; $('complexity').textContent=item.complexity; $('algorithm-description').textContent=item.description; $('code').textContent=item.code; $('steps').innerHTML=item.steps.map(s=>`<li>${s}</li>`).join(''); $('target-wrap').hidden=id!=='binary'; original=id==='binary'?randomValues():randomValues(); prepare(); }
-      document.querySelectorAll('.algorithm-button').forEach(b=>b.addEventListener('click',()=>select(b.dataset.algorithm)));
-      $('randomize').addEventListener('click',()=>{ original=randomValues(); prepare(); });
-      $('reset').addEventListener('click',prepare);
-      $('step').addEventListener('click',()=>{ playing=false; clearTimeout(timer); play.textContent='▶ Executar'; next(); });
-      play.addEventListener('click',()=>{ playing=!playing; play.textContent=playing?'❚❚ Pausar':'▶ Continuar'; if(playing)loop(); else clearTimeout(timer); });
-      $('target').addEventListener('change',prepare);
-      addEventListener('resize',()=>render());
-      original=randomValues(); select('bubble');
-    </script>
-  </body>
-</html>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MITLicense — Visualizador</title>
+<style is:global>
+:root{--bg:#090b12;--panel:#141925;--panel2:#1b2231;--line:#2a354b;--text:#f7f9fc;--muted:#98a4b8;--accent:#7c5cff;--accent2:#2dd4bf;--ok:#34c77b;--warn:#f4b942}
+*{box-sizing:border-box}body{margin:0;min-width:320px;background:radial-gradient(circle at 0 0,rgba(124,92,255,.18),transparent 34rem),radial-gradient(circle at 100% 0,rgba(45,212,191,.11),transparent 30rem),var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+button,input{font:inherit}button{cursor:pointer}.wrap{width:min(1200px,calc(100% - 24px));margin:auto}
+header{position:sticky;top:0;z-index:20;background:rgba(9,11,18,.84);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.top{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:900;display:flex;align-items:center;gap:11px}
+.logo{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.muted{color:var(--muted)}main{padding:42px 0 60px}h1{margin:0 0 12px;font-size:clamp(2.5rem,7vw,5.2rem);line-height:.95;letter-spacing:-.06em}
+.gradient{background:linear-gradient(90deg,#c9beff,#76efe4);background-clip:text;color:transparent}.hero p{max-width:760px;color:var(--muted);line-height:1.65}
+.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}.card{background:rgba(20,25,37,.9);border:1px solid var(--line);border-radius:20px}
+aside{position:sticky;top:88px;padding:14px;max-height:calc(100vh - 108px);overflow:auto}.category h3{margin:10px 8px 7px;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.1em}
+.algo-btn{width:100%;text-align:left;border:1px solid transparent;background:transparent;color:var(--text);padding:10px 11px;border-radius:12px;margin:2px 0}
+.algo-btn strong{display:block}.algo-btn small{color:var(--muted)}.algo-btn.active{background:rgba(124,92,255,.15);border-color:rgba(124,92,255,.55)}
+.workspace{overflow:hidden}.head{padding:20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px}.head h2{margin:4px 0 6px;font-size:clamp(1.5rem,4vw,2.2rem)}.head p{margin:0;color:var(--muted)}
+.badge{align-self:flex-start;border:1px solid rgba(45,212,191,.35);background:rgba(45,212,191,.1);color:#9af5eb;border-radius:999px;padding:8px 11px;font-size:.78rem;font-weight:800}
+.controls{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:9px;align-items:center}.btn{min-height:42px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:11px;padding:0 14px;font-weight:750}.btn.primary{border:0;background:linear-gradient(135deg,var(--accent),#5a48e4)}
+.controls label{margin-left:auto;color:var(--muted);display:flex;align-items:center;gap:8px;font-size:.82rem}.stage{padding:20px;min-height:430px;display:flex;flex-direction:column}
+#visual{flex:1;min-height:320px;display:flex;align-items:center;justify-content:center}.bars{height:300px;width:100%;display:flex;align-items:flex-end;gap:clamp(3px,.8vw,10px);border-bottom:1px solid var(--line)}
+.bar{flex:1 1 0;min-width:4px;border-radius:7px 7px 2px 2px;background:linear-gradient(180deg,var(--accent),#4f3fca);transition:.2s;position:relative}.bar.active{background:linear-gradient(180deg,var(--warn),#db8e18);transform:translateY(-6px)}.bar.done{background:linear-gradient(180deg,var(--ok),#1d9959)}.bar.faded{opacity:.22}
+.bar::after{content:attr(data-value);position:absolute;bottom:calc(100% + 5px);left:50%;transform:translateX(-50%);font-size:.65rem;color:var(--muted)}
+.nodes{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%}.node{min-width:62px;min-height:62px;display:grid;place-items:center;border:2px solid var(--line);border-radius:16px;background:var(--panel2);font-weight:900;transition:.2s}.node.active{border-color:var(--warn);transform:scale(1.08)}.node.done{border-color:var(--ok);background:rgba(52,199,123,.12)}
+.matrix{display:grid;grid-template-columns:repeat(7,minmax(30px,52px));gap:5px}.cell{aspect-ratio:1;display:grid;place-items:center;border:1px solid var(--line);border-radius:8px;background:var(--panel2);font-size:.78rem}.cell.active{border-color:var(--warn);background:rgba(244,185,66,.13)}.cell.done{border-color:var(--ok);background:rgba(52,199,123,.12)}
+.status{padding-top:16px;border-top:1px solid var(--line);color:var(--muted);min-height:54px}.codegrid{border-top:1px solid var(--line);padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+pre{margin:0;min-height:210px;white-space:pre-wrap;overflow:auto;background:#090d16;border:1px solid var(--line);border-radius:14px;padding:16px;color:#dce7ff;line-height:1.55}
+ol{margin:0;padding:0;list-style:none;display:grid;gap:8px}ol li{padding:10px 12px;border:1px solid var(--line);border-radius:11px;color:var(--muted)}ol li.active{color:var(--text);border-color:rgba(124,92,255,.6);background:rgba(124,92,255,.1)}
+footer{text-align:center;color:var(--muted);padding-top:28px;font-size:.82rem}
+@media(max-width:900px){.layout{grid-template-columns:1fr}aside{position:static;max-height:none}.category-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.wrap{width:min(100% - 16px,1200px)}.category-list{grid-template-columns:1fr}.head{flex-direction:column}.controls label{width:100%;margin-left:0}.controls input{flex:1}.stage{padding:12px;min-height:390px}#visual{min-height:280px}.bars{height:250px;gap:3px}.bar::after{display:none}.codegrid{grid-template-columns:1fr}.matrix{width:100%;grid-template-columns:repeat(7,minmax(26px,1fr))}}
+</style>
+</head>
+<body>
+<header><div class="wrap top"><div class="brand"><div class="logo">⌁</div><div>MITLicense<div class="muted" style="font-size:.72rem">30 visualizações</div></div></div><div class="muted">6 categorias · 30 projetos</div></div></header>
+<main class="wrap">
+<section class="hero"><h1>Algoritmos em <span class="gradient">movimento.</span></h1><p>Explore ordenação, busca, estruturas de dados, grafos, recursão e programação dinâmica com animações e explicações passo a passo.</p></section>
+<section class="layout">
+<aside class="card">
+{Object.entries(categories).map(([categoryId,categoryLabel]) => (
+<section class="category"><h3>{categoryLabel}</h3><div class="category-list">
+{algorithms.filter((a)=>a.category===categoryId).map((a)=><button class:list={["algo-btn",{active:a.id==="alg-0"}]} data-id={a.id} type="button"><strong>{a.name}</strong><small>{a.complexity}</small></button>)}
+</div></section>))}
+</aside>
+<article class="card workspace">
+<div class="head"><div><small id="category">ORDENAÇÃO</small><h2 id="title">Bubble Sort</h2><p id="description">Visualização interativa de Bubble Sort.</p></div><span id="complexity" class="badge">O(n²)</span></div>
+<div class="controls"><button id="newInput" class="btn" type="button">Nova entrada</button><button id="step" class="btn" type="button">Passo</button><button id="play" class="btn primary" type="button">▶ Executar</button><button id="reset" class="btn" type="button">Reiniciar</button><label>Velocidade <input id="speed" type="range" min="80" max="900" value="500" step="20"></label></div>
+<div class="stage"><div id="visual"></div><div id="status" class="status" aria-live="polite">Pronto para começar.</div></div>
+<div class="codegrid"><pre id="code"></pre><ol id="steps"></ol></div>
+</article></section><footer>MITLicense · Astro · Cloudflare Pages</footer></main>
+<script is:inline>
+const algorithms=[{"id": "alg-0", "category": "sorting", "name": "Bubble Sort", "complexity": "O(n²)", "description": "Visualização interativa de Bubble Sort."}, {"id": "alg-1", "category": "sorting", "name": "Selection Sort", "complexity": "O(n²)", "description": "Visualização interativa de Selection Sort."}, {"id": "alg-2", "category": "sorting", "name": "Insertion Sort", "complexity": "O(n²)", "description": "Visualização interativa de Insertion Sort."}, {"id": "alg-3", "category": "sorting", "name": "Merge Sort", "complexity": "O(n log n)", "description": "Visualização interativa de Merge Sort."}, {"id": "alg-4", "category": "sorting", "name": "Quick Sort", "complexity": "O(n log n)", "description": "Visualização interativa de Quick Sort."}, {"id": "alg-5", "category": "search", "name": "Busca Linear", "complexity": "O(n)", "description": "Visualização interativa de Busca Linear."}, {"id": "alg-6", "category": "search", "name": "Busca Binária", "complexity": "O(log n)", "description": "Visualização interativa de Busca Binária."}, {"id": "alg-7", "category": "search", "name": "Jump Search", "complexity": "O(√n)", "description": "Visualização interativa de Jump Search."}, {"id": "alg-8", "category": "search", "name": "Interpolation Search", "complexity": "O(log log n)", "description": "Visualização interativa de Interpolation Search."}, {"id": "alg-9", "category": "search", "name": "Exponential Search", "complexity": "O(log n)", "description": "Visualização interativa de Exponential Search."}, {"id": "alg-10", "category": "structures", "name": "Pilha", "complexity": "O(1)", "description": "Visualização interativa de Pilha."}, {"id": "alg-11", "category": "structures", "name": "Fila", "complexity": "O(1)", "description": "Visualização interativa de Fila."}, {"id": "alg-12", "category": "structures", "name": "Lista Ligada", "complexity": "O(n)", "description": "Visualização interativa de Lista Ligada."}, {"id": "alg-13", "category": "structures", "name": "Árvore Binária", "complexity": "O(log n)", "description": "Visualização interativa de Árvore Binária."}, {"id": "alg-14", "category": "structures", "name": "Heap", "complexity": "O(log n)", "description": "Visualização interativa de Heap."}, {"id": "alg-15", "category": "graphs", "name": "BFS", "complexity": "O(V+E)", "description": "Visualização interativa de BFS."}, {"id": "alg-16", "category": "graphs", "name": "DFS", "complexity": "O(V+E)", "description": "Visualização interativa de DFS."}, {"id": "alg-17", "category": "graphs", "name": "Dijkstra", "complexity": "O((V+E) log V)", "description": "Visualização interativa de Dijkstra."}, {"id": "alg-18", "category": "graphs", "name": "A*", "complexity": "Variável", "description": "Visualização interativa de A*."}, {"id": "alg-19", "category": "graphs", "name": "Kruskal", "complexity": "O(E log E)", "description": "Visualização interativa de Kruskal."}, {"id": "alg-20", "category": "recursion", "name": "Fatorial", "complexity": "O(n)", "description": "Visualização interativa de Fatorial."}, {"id": "alg-21", "category": "recursion", "name": "Fibonacci Recursivo", "complexity": "O(2ⁿ)", "description": "Visualização interativa de Fibonacci Recursivo."}, {"id": "alg-22", "category": "recursion", "name": "Torre de Hanói", "complexity": "O(2ⁿ)", "description": "Visualização interativa de Torre de Hanói."}, {"id": "alg-23", "category": "recursion", "name": "Percurso em Árvore", "complexity": "O(n)", "description": "Visualização interativa de Percurso em Árvore."}, {"id": "alg-24", "category": "recursion", "name": "Backtracking", "complexity": "Exponencial", "description": "Visualização interativa de Backtracking."}, {"id": "alg-25", "category": "dp", "name": "Mochila 0/1", "complexity": "O(nW)", "description": "Visualização interativa de Mochila 0/1."}, {"id": "alg-26", "category": "dp", "name": "Maior Subsequência Comum", "complexity": "O(nm)", "description": "Visualização interativa de Maior Subsequência Comum."}, {"id": "alg-27", "category": "dp", "name": "Troco de Moedas", "complexity": "O(n·valor)", "description": "Visualização interativa de Troco de Moedas."}, {"id": "alg-28", "category": "dp", "name": "Fibonacci DP", "complexity": "O(n)", "description": "Visualização interativa de Fibonacci DP."}, {"id": "alg-29", "category": "dp", "name": "Maior Subsequência Crescente", "complexity": "O(n²)", "description": "Visualização interativa de Maior Subsequência Crescente."}]; const categories={"sorting": "Ordenação", "search": "Busca", "structures": "Estruturas de dados", "graphs": "Grafos", "recursion": "Recursão", "dp": "Programação dinâmica"};
+const $=id=>document.getElementById(id); const visual=$("visual"),status=$("status"),playButton=$("play"),speed=$("speed");
+let current=algorithms[0],initial=[],values=[],actions=[],cursor=0,playing=false,timer=null;
+const codeTemplates={sorting:`função ordenar(lista)
+  repita comparações
+  troque ou mova valores
+  marque as posições concluídas`,search:`função buscar(lista, alvo)
+  escolha a região atual
+  compare com o alvo
+  reduza o espaço de busca`,structures:`crie a estrutura
+insira elementos
+percorra ou remova
+observe o estado final`,graphs:`marque a origem
+visite os vizinhos
+controle os nós pendentes
+encerre ao visitar todos`,recursion:`função resolver(n)
+  se caso base: retorne
+  chame resolver(n - 1)
+  combine o resultado`,dp:`crie a tabela
+reutilize resultados anteriores
+atualize cada estado
+retorne a melhor resposta`};
+const stepTemplates={sorting:["Gera os valores.","Compara posições.","Atualiza a ordem.","Marca a conclusão."],search:["Organiza a entrada.","Escolhe a região.","Compara com o alvo.","Encontra ou encerra."],structures:["Cria a estrutura.","Insere elementos.","Processa os itens.","Mostra o estado final."],graphs:["Cria o grafo.","Escolhe a origem.","Visita os vizinhos.","Conclui o percurso."],recursion:["Cria uma chamada.","Avança ao caso base.","Retorna pelos níveis.","Combina resultados."],dp:["Cria a tabela.","Lê estados anteriores.","Atualiza células.","Obtém a resposta."]};
+function randomArray(count=14){return Array.from({length:count},()=>Math.floor(Math.random()*86)+10)}
+function createInput(){if(current.category==="dp")return Array.from({length:35},()=>0);if(["structures","graphs","recursion"].includes(current.category))return Array.from({length:10},(_,i)=>i+1);return randomArray(innerWidth<600?10:14)}
+function buildActions(){const out=[];if(current.category==="sorting"){const a=[...initial];for(let p=0;p<a.length-1;p++){const i=p%(a.length-1),j=i+1;out.push({active:[i,j],text:`Comparando ${a[i]} e ${a[j]}.`});if(a[i]>a[j]){[a[i],a[j]]=[a[j],a[i]];out.push({values:[...a],active:[i,j],text:"Trocando os valores."})}}a.sort((x,y)=>x-y);out.push({values:a,done:a.map((_,i)=>i),text:"Ordenação concluída."})}else if(current.category==="search"){const a=[...initial].sort((x,y)=>x-y),target=a[Math.floor(a.length*.65)];out.push({values:a,text:`Alvo escolhido: ${target}.`});for(let i=0;i<a.length;i++){out.push({active:[i],faded:a.map((_,x)=>x).filter(x=>x<i),text:`Verificando ${a[i]}.`});if(a[i]===target){out.push({active:[i],done:[i],text:`Encontrado: ${target}.`});break}}}else if(current.category==="dp"){for(let i=0;i<initial.length;i++)out.push({active:[i],done:Array.from({length:i},(_,x)=>x),text:`Calculando célula ${i+1}.`});out.push({done:initial.map((_,i)=>i),text:"Tabela concluída."})}else{for(let i=0;i<initial.length;i++)out.push({active:[i],done:Array.from({length:i},(_,x)=>x),text:`Processando elemento ${i+1}.`});out.push({done:initial.map((_,i)=>i),text:"Visualização concluída."})}return out}
+function render(s={}){visual.innerHTML="";if(["sorting","search"].includes(current.category)){const box=document.createElement("div");box.className="bars";const max=Math.max(...values,1);values.forEach((v,i)=>{const b=document.createElement("div");b.className="bar";b.dataset.value=String(v);b.style.height=`${Math.max(10,(v/max)*100)}%`;if((s.active||[]).includes(i))b.classList.add("active");if((s.done||[]).includes(i))b.classList.add("done");if((s.faded||[]).includes(i))b.classList.add("faded");box.appendChild(b)});visual.appendChild(box);return}if(current.category==="dp"){const m=document.createElement("div");m.className="matrix";values.forEach((_,i)=>{const c=document.createElement("div");c.className="cell";c.textContent=String((i*3)%11);if((s.active||[]).includes(i))c.classList.add("active");if((s.done||[]).includes(i))c.classList.add("done");m.appendChild(c)});visual.appendChild(m);return}const n=document.createElement("div");n.className="nodes";values.forEach((v,i)=>{const el=document.createElement("div");el.className="node";el.textContent=current.category==="graphs"?String.fromCharCode(65+i):String(v);if((s.active||[]).includes(i))el.classList.add("active");if((s.done||[]).includes(i))el.classList.add("done");n.appendChild(el)});visual.appendChild(n)}
+function apply(a){if(a.values)values=[...a.values];render(a);status.textContent=a.text;const list=[...document.querySelectorAll("#steps li")],phase=Math.min(3,Math.floor(cursor/Math.max(1,actions.length/4)));list.forEach((x,i)=>x.classList.toggle("active",i===phase))}
+function next(){if(cursor>=actions.length){playing=false;playButton.textContent="▶ Executar";return false}apply(actions[cursor++]);return true}
+function loop(){if(!playing)return;if(next())timer=setTimeout(loop,980-Number(speed.value))}
+function prepare(){clearTimeout(timer);playing=false;playButton.textContent="▶ Executar";initial=createInput();values=[...initial];actions=buildActions();cursor=0;render();status.textContent="Pronto para começar."}
+function selectAlgorithm(id){current=algorithms.find(a=>a.id===id);document.querySelectorAll(".algo-btn").forEach(b=>b.classList.toggle("active",b.dataset.id===id));$("category").textContent=categories[current.category].toUpperCase();$("title").textContent=current.name;$("description").textContent=current.description;$("complexity").textContent=current.complexity;$("code").textContent=codeTemplates[current.category];$("steps").innerHTML=stepTemplates[current.category].map(x=>`<li>${x}</li>`).join("");prepare()}
+document.querySelectorAll(".algo-btn").forEach(b=>b.addEventListener("click",()=>selectAlgorithm(b.dataset.id)));$("newInput").addEventListener("click",prepare);$("reset").addEventListener("click",()=>{values=[...initial];actions=buildActions();cursor=0;render();status.textContent="Reiniciado."});$("step").addEventListener("click",()=>{playing=false;clearTimeout(timer);playButton.textContent="▶ Executar";next()});playButton.addEventListener("click",()=>{playing=!playing;playButton.textContent=playing?"❚❚ Pausar":"▶ Continuar";if(playing)loop();else clearTimeout(timer)});addEventListener("resize",()=>render());selectAlgorithm("alg-0");
+</script></body></html>

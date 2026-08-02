@@ -1,9 +1,8 @@
 {
-  "name": "mitlicense",
+  "name": "mitlicense-visualizer-30",
   "version": "1.0.0",
-  "description": "Visualizador interativo de algoritmos, sem backend.",
-  "type": "module",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -11,8 +10,5 @@
   },
   "dependencies": {
     "astro": "^5.12.8"
-  },
-  "devDependencies": {
-    "typescript": "^5.8.3"
   }
 }
