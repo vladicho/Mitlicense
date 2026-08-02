@@ -1,5 +1,6 @@
-# MITLicense Visualizer 100
+# MITLicense Visualizer 100 — Fase 1
 
-10 categorias e 100 algoritmos.
-
-As animações usam motores didáticos por categoria; nem todos os algoritmos têm uma simulação exclusiva ainda.
+- 100 algoritmos catalogados.
+- 15 algoritmos com animação exclusiva.
+- 85 algoritmos ainda usam motores genéricos por categoria.
+- Pronto para Astro + Cloudflare Pages.
