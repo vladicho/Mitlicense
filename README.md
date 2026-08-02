@@ -1,7 +1,5 @@
-# MITLicense Visualizer
+# MITLicense Visualizer 100
 
-6 categorias e 30 visualizações interativas.
+10 categorias e 100 algoritmos.
 
-Cloudflare Pages: Astro / npm run build / dist.
-
-- Números acima das barras também no celular.
+As animações usam motores didáticos por categoria; nem todos os algoritmos têm uma simulação exclusiva ainda.
