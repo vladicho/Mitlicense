@@ -1,3 +1,6 @@
-# MITLicense Visualizer 100
+# MITLicense Visualizer 100 — Fase 3
 
-Inclui nome em português, significado e caso de uso real para os 100 algoritmos.
+- 100 algoritmos catalogados.
+- 45 algoritmos com animação exclusiva.
+- 55 algoritmos ainda usam motores genéricos por categoria.
+- Inclui significados e possíveis casos de uso.
