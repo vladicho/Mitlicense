@@ -1,0 +1,132 @@
+---
+const algorithms = [
+  { id: 'bubble', label: 'Bubble Sort', category: 'Ordenação', complexity: 'O(n²)' },
+  { id: 'selection', label: 'Selection Sort', category: 'Ordenação', complexity: 'O(n²)' },
+  { id: 'insertion', label: 'Insertion Sort', category: 'Ordenação', complexity: 'O(n²)' },
+  { id: 'binary', label: 'Busca Binária', category: 'Busca', complexity: 'O(log n)' }
+];
+---
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content="MITLicense: visualizador interativo de algoritmos executado diretamente no navegador." />
+    <title>MITLicense | Visualizador de Algoritmos</title>
+    <style>
+      :root { --paper:#f3f0e8; --ink:#171915; --muted:#696b63; --line:#c9c6bc; --mint:#b9f3d0; --yellow:#f9dd6c; --blue:#b9dafa; --peach:#f7c7aa; --dark:#20231f; }
+      * { box-sizing:border-box; }
+      html { scroll-behavior:smooth; }
+      body { margin:0; background:var(--paper); color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+      button, input, select { font:inherit; }
+      button { cursor:pointer; }
+      .wrap { width:min(1180px, calc(100% - 32px)); margin:auto; }
+      header { border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20; background:rgba(243,240,232,.94); backdrop-filter:blur(12px); }
+      .topbar { min-height:70px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+      .brand { color:var(--ink); font-weight:900; letter-spacing:-.04em; text-decoration:none; font-size:1.2rem; }
+      .brand span { color:#16864d; }
+      nav { display:flex; gap:10px; align-items:center; }
+      nav a { color:var(--ink); text-decoration:none; font-weight:750; padding:10px 14px; border:1px solid transparent; }
+      nav a:hover { border-color:var(--ink); }
+      .hero { padding:72px 0 52px; display:grid; grid-template-columns:1.15fr .85fr; gap:40px; align-items:end; }
+      .eyebrow { font-size:.75rem; font-weight:900; letter-spacing:.16em; margin:0 0 18px; }
+      h1 { margin:0; font-size:clamp(3.2rem, 8vw, 7rem); line-height:.84; letter-spacing:-.075em; max-width:850px; }
+      h1 em { font-family:Georgia, serif; font-weight:400; }
+      .hero-copy { color:var(--muted); font-size:1.12rem; line-height:1.65; max-width:520px; margin:0; }
+      .hero-badge { border:1px solid var(--ink); padding:22px; background:var(--yellow); transform:rotate(2deg); box-shadow:7px 7px 0 var(--ink); }
+      .hero-badge strong { display:block; font-size:2.4rem; letter-spacing:-.05em; }
+      .hero-badge span { font-weight:800; }
+      .workspace { border-top:1px solid var(--line); padding:38px 0 70px; display:grid; grid-template-columns:300px minmax(0,1fr); gap:22px; }
+      .sidebar, .panel { border:1px solid var(--ink); background:#faf8f2; box-shadow:5px 5px 0 var(--ink); }
+      .sidebar { padding:18px; align-self:start; position:sticky; top:92px; }
+      .sidebar h2 { margin:2px 0 14px; font-size:.78rem; letter-spacing:.14em; }
+      .algorithm-list { display:grid; gap:9px; }
+      .algorithm-button { text-align:left; border:1px solid var(--line); background:transparent; padding:14px; display:grid; gap:4px; }
+      .algorithm-button strong { font-size:1rem; }
+      .algorithm-button small { color:var(--muted); }
+      .algorithm-button.active { background:var(--mint); border-color:var(--ink); transform:translateX(3px); }
+      .tip { margin:20px 0 0; padding:14px; background:var(--blue); line-height:1.45; font-size:.88rem; border:1px solid var(--ink); }
+      .panel { min-width:0; }
+      .panel-head { padding:22px; border-bottom:1px solid var(--ink); display:flex; justify-content:space-between; gap:20px; align-items:flex-start; }
+      .panel-head h2 { margin:3px 0 4px; font-size:clamp(1.6rem,4vw,2.8rem); letter-spacing:-.045em; }
+      .panel-head p { margin:0; color:var(--muted); }
+      .complexity { padding:9px 12px; background:var(--peach); border:1px solid var(--ink); font-weight:900; white-space:nowrap; }
+      .controls { padding:16px 22px; border-bottom:1px solid var(--line); display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
+      .controls button, .controls select, .controls input { min-height:42px; border:1px solid var(--ink); background:var(--paper); padding:9px 13px; font-weight:750; }
+      .controls .primary { background:var(--dark); color:white; }
+      .controls .accent { background:var(--yellow); }
+      .controls label { display:flex; align-items:center; gap:8px; font-size:.85rem; font-weight:800; }
+      .controls input[type=range] { padding:0; width:120px; min-height:auto; border:0; }
+      .visual-stage { min-height:430px; padding:34px 24px 20px; display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden; }
+      .bars { height:310px; display:flex; align-items:flex-end; gap:clamp(3px, 1vw, 12px); border-bottom:2px solid var(--ink); padding:0 4px; }
+      .bar { flex:1; min-width:5px; background:var(--blue); border:1px solid var(--ink); position:relative; transition:height .22s ease, background .15s, transform .15s; }
+      .bar::after { content:attr(data-value); position:absolute; top:-24px; left:50%; transform:translateX(-50%); font-size:.72rem; font-weight:900; }
+      .bar.comparing { background:var(--yellow); transform:translateY(-7px); }
+      .bar.active { background:var(--peach); }
+      .bar.sorted { background:var(--mint); }
+      .bar.faded { opacity:.28; }
+      .bar.found { background:var(--mint); transform:translateY(-12px); }
+      .status { min-height:58px; padding:17px 22px; margin:0; border-top:1px solid var(--line); font-family:ui-monospace, SFMono-Regular, Menlo, monospace; font-weight:700; background:#eeece4; }
+      .code-grid { display:grid; grid-template-columns:1fr 1fr; border-top:1px solid var(--ink); }
+      .code, .explanation { padding:22px; min-height:245px; }
+      .code { background:var(--dark); color:#eae9e2; overflow:auto; }
+      .code pre { margin:0; font-size:.82rem; line-height:1.65; white-space:pre-wrap; }
+      .explanation { border-left:1px solid var(--ink); }
+      .explanation h3 { margin-top:0; font-size:1rem; letter-spacing:.08em; }
+      .explanation ol { padding-left:20px; line-height:1.65; color:var(--muted); }
+      footer { border-top:1px solid var(--line); padding:28px 0 42px; color:var(--muted); }
+      @media (max-width:850px) { .hero { grid-template-columns:1fr; } .hero-badge { max-width:360px; } .workspace { grid-template-columns:1fr; } .sidebar { position:static; } .algorithm-list { grid-template-columns:repeat(2,1fr); } .code-grid { grid-template-columns:1fr; } .explanation { border-left:0; border-top:1px solid var(--ink); } }
+      @media (max-width:540px) { .wrap { width:min(100% - 20px,1180px); } .topbar { min-height:60px; } nav a:first-child { display:none; } .hero { padding-top:48px; } .algorithm-list { grid-template-columns:1fr; } .panel-head { flex-direction:column; } .visual-stage { padding-left:10px; padding-right:10px; min-height:360px; } .bars { height:250px; gap:3px; } .bar::after { display:none; } .controls { padding:12px; } }
+    </style>
+  </head>
+  <body>
+    <header><div class="topbar wrap"><a class="brand" href="/">MIT<span>LICENSE</span></a><nav><a href="#laboratorio">Laboratório</a><a href="https://github.com/vladicho/mitlicense" target="_blank" rel="noreferrer">GitHub ↗</a></nav></div></header>
+    <main>
+      <section class="hero wrap">
+        <div><p class="eyebrow">LABORATÓRIO INTERATIVO</p><h1>Veja o algoritmo <em>pensar.</em></h1></div>
+        <div><p class="hero-copy">Escolha um algoritmo, controle a velocidade e acompanhe comparações, trocas e decisões diretamente no navegador.</p><div class="hero-badge"><strong>100%</strong><span>JavaScript · sem backend</span></div></div>
+      </section>
+      <section id="laboratorio" class="workspace wrap">
+        <aside class="sidebar"><h2>ALGORITMOS</h2><div class="algorithm-list">{algorithms.map((algorithm, index) => <button class:list={['algorithm-button', { active:index===0 }]} data-algorithm={algorithm.id} type="button"><strong>{algorithm.label}</strong><small>{algorithm.category} · {algorithm.complexity}</small></button>)}</div><p class="tip"><strong>Dica:</strong> use “Passo” para observar cada decisão sem animação automática.</p></aside>
+        <article class="panel">
+          <div class="panel-head"><div><small id="category">ORDENAÇÃO</small><h2 id="algorithm-title">Bubble Sort</h2><p id="algorithm-description">Compara pares vizinhos e troca os valores que estão fora de ordem.</p></div><span id="complexity" class="complexity">O(n²)</span></div>
+          <div class="controls"><button id="randomize" class="accent" type="button">Nova lista</button><button id="step" type="button">Passo</button><button id="play" class="primary" type="button">▶ Executar</button><button id="reset" type="button">Reiniciar</button><label>Velocidade <input id="speed" type="range" min="80" max="900" value="420" step="20" /></label><label id="target-wrap" hidden>Buscar <input id="target" type="number" min="1" max="99" value="42" /></label></div>
+          <div class="visual-stage"><div id="bars" class="bars" aria-label="Visualização do algoritmo"></div></div>
+          <p id="status" class="status" aria-live="polite">Pronto. Escolha “Executar” ou avance um passo.</p>
+          <div class="code-grid"><div class="code"><pre id="code"></pre></div><div class="explanation"><h3>COMO FUNCIONA</h3><ol id="steps"></ol></div></div>
+        </article>
+      </section>
+    </main>
+    <footer><div class="wrap">MITLicense · visualizador de algoritmos executado localmente no navegador · código sob licença MIT.</div></footer>
+    <script is:inline>
+      const info = {
+        bubble:{ title:'Bubble Sort', category:'ORDENAÇÃO', complexity:'O(n²)', description:'Compara pares vizinhos e troca os valores que estão fora de ordem.', code:`para i de 0 até n - 1\n  para j de 0 até n - i - 2\n    se lista[j] > lista[j + 1]\n      troque lista[j] e lista[j + 1]`, steps:['Percorre a lista várias vezes.','Compara dois valores vizinhos.','Troca quando o valor da esquerda é maior.','Ao fim de cada rodada, o maior valor fica no lugar certo.'] },
+        selection:{ title:'Selection Sort', category:'ORDENAÇÃO', complexity:'O(n²)', description:'Procura o menor valor restante e coloca-o na próxima posição.', code:`para i de 0 até n - 1\n  menor = i\n  para j de i + 1 até n - 1\n    se lista[j] < lista[menor]\n      menor = j\n  troque lista[i] e lista[menor]`, steps:['Define a primeira posição ainda não ordenada.','Procura o menor valor no trecho restante.','Guarda o índice desse menor valor.','Troca-o com a primeira posição livre.'] },
+        insertion:{ title:'Insertion Sort', category:'ORDENAÇÃO', complexity:'O(n²)', description:'Insere cada item no ponto correto da parte já ordenada.', code:`para i de 1 até n - 1\n  chave = lista[i]\n  j = i - 1\n  enquanto j >= 0 e lista[j] > chave\n    lista[j + 1] = lista[j]\n    j = j - 1\n  lista[j + 1] = chave`, steps:['Considera o primeiro item como ordenado.','Retira o próximo item como chave.','Move para a direita os valores maiores.','Insere a chave na posição correta.'] },
+        binary:{ title:'Busca Binária', category:'BUSCA', complexity:'O(log n)', description:'Divide uma lista ordenada ao meio até encontrar o valor desejado.', code:`inicio = 0\nfim = n - 1\nenquanto inicio <= fim\n  meio = (inicio + fim) / 2\n  se lista[meio] == alvo: encontrou\n  senão se lista[meio] < alvo: inicio = meio + 1\n  senão: fim = meio - 1`, steps:['A lista precisa estar ordenada.','Compara o alvo com o valor central.','Descarta metade da lista a cada comparação.','Repete até encontrar o alvo ou esgotar o intervalo.'] }
+      };
+      let values=[], original=[], algorithm='bubble', actions=[], cursor=0, playing=false, timer=null;
+      const $=id=>document.getElementById(id);
+      const bars=$('bars'), status=$('status'), play=$('play');
+      function randomValues(){ return Array.from({length: innerWidth<540?10:14},()=>Math.floor(Math.random()*88)+10); }
+      function render(state={}){ bars.innerHTML=''; const max=Math.max(...values); values.forEach((v,i)=>{ const el=document.createElement('div'); el.className='bar'; el.style.height=`${Math.max(10,(v/max)*100)}%`; el.dataset.value=v; if((state.compare||[]).includes(i)) el.classList.add('comparing'); if((state.active||[]).includes(i)) el.classList.add('active'); if((state.sorted||[]).includes(i)) el.classList.add('sorted'); if((state.faded||[]).includes(i)) el.classList.add('faded'); if(state.found===i) el.classList.add('found'); bars.appendChild(el); }); }
+      function bubbleActions(arr){ const a=[...arr], out=[]; for(let i=0;i<a.length;i++){ for(let j=0;j<a.length-i-1;j++){ out.push({type:'compare',idx:[j,j+1],text:`Comparando ${a[j]} e ${a[j+1]}.`}); if(a[j]>a[j+1]){ [a[j],a[j+1]]=[a[j+1],a[j]]; out.push({type:'set',values:[...a],idx:[j,j+1],text:`Trocando: ${a[j]} vem antes de ${a[j+1]}.`}); } } out.push({type:'sorted',sorted:Array.from({length:i+1},(_,k)=>a.length-1-k),text:`${a[a.length-1-i]} chegou à posição final.`}); } return out; }
+      function selectionActions(arr){ const a=[...arr],out=[]; for(let i=0;i<a.length;i++){ let min=i; for(let j=i+1;j<a.length;j++){ out.push({type:'compare',idx:[min,j],text:`Procurando o menor: ${a[min]} × ${a[j]}.`}); if(a[j]<a[min]) min=j; } if(min!==i){ [a[i],a[min]]=[a[min],a[i]]; out.push({type:'set',values:[...a],idx:[i,min],text:`Movendo ${a[i]} para a posição ${i+1}.`}); } out.push({type:'sorted',sorted:Array.from({length:i+1},(_,k)=>k),text:`Posição ${i+1} concluída.`}); } return out; }
+      function insertionActions(arr){ const a=[...arr],out=[]; for(let i=1;i<a.length;i++){ const key=a[i]; let j=i-1; out.push({type:'compare',idx:[i],text:`Inserindo a chave ${key}.`}); while(j>=0&&a[j]>key){ a[j+1]=a[j]; out.push({type:'set',values:[...a],idx:[j,j+1],text:`Deslocando ${a[j]} para a direita.`}); j--; } a[j+1]=key; out.push({type:'set',values:[...a],idx:[j+1],sorted:Array.from({length:i+1},(_,k)=>k),text:`${key} inserido na posição correta.`}); } return out; }
+      function binaryActions(arr,target){ const a=[...arr].sort((x,y)=>x-y),out=[{type:'set',values:a,text:'Lista ordenada para iniciar a busca.'}]; let l=0,r=a.length-1; while(l<=r){ const m=Math.floor((l+r)/2), faded=a.map((_,i)=>i).filter(i=>i<l||i>r); out.push({type:'search',idx:[m],faded,text:`Meio: ${a[m]}. Comparando com ${target}.`}); if(a[m]===target){ out.push({type:'found',found:m,faded,text:`Encontrado: ${target} na posição ${m+1}.`}); return out; } if(a[m]<target) l=m+1; else r=m-1; } out.push({type:'notfound',faded:a.map((_,i)=>i),text:`${target} não está na lista.`}); return out; }
+      function prepare(){ values=[...original]; cursor=0; playing=false; clearTimeout(timer); play.textContent='▶ Executar'; const target=Number($('target').value); actions=algorithm==='bubble'?bubbleActions(values):algorithm==='selection'?selectionActions(values):algorithm==='insertion'?insertionActions(values):binaryActions(values,target); render(); status.textContent='Pronto. Escolha “Executar” ou avance um passo.'; }
+      function apply(action){ if(action.values) values=[...action.values]; render({compare:action.idx,active:action.idx,sorted:action.sorted,faded:action.faded,found:action.found}); status.textContent=action.text; }
+      function next(){ if(cursor>=actions.length){ playing=false; play.textContent='▶ Executar'; render({sorted:algorithm==='binary'?[]:values.map((_,i)=>i)}); status.textContent=algorithm==='binary'?status.textContent:'Concluído: lista ordenada.'; return false; } apply(actions[cursor++]); return true; }
+      function loop(){ if(!playing)return; if(next()) timer=setTimeout(loop,980-Number($('speed').value)); }
+      function select(id){ algorithm=id; document.querySelectorAll('.algorithm-button').forEach(b=>b.classList.toggle('active',b.dataset.algorithm===id)); const item=info[id]; $('algorithm-title').textContent=item.title; $('category').textContent=item.category; $('complexity').textContent=item.complexity; $('algorithm-description').textContent=item.description; $('code').textContent=item.code; $('steps').innerHTML=item.steps.map(s=>`<li>${s}</li>`).join(''); $('target-wrap').hidden=id!=='binary'; original=id==='binary'?randomValues():randomValues(); prepare(); }
+      document.querySelectorAll('.algorithm-button').forEach(b=>b.addEventListener('click',()=>select(b.dataset.algorithm)));
+      $('randomize').addEventListener('click',()=>{ original=randomValues(); prepare(); });
+      $('reset').addEventListener('click',prepare);
+      $('step').addEventListener('click',()=>{ playing=false; clearTimeout(timer); play.textContent='▶ Executar'; next(); });
+      play.addEventListener('click',()=>{ playing=!playing; play.textContent=playing?'❚❚ Pausar':'▶ Continuar'; if(playing)loop(); else clearTimeout(timer); });
+      $('target').addEventListener('change',prepare);
+      addEventListener('resize',()=>render());
+      original=randomValues(); select('bubble');
+    </script>
+  </body>
+</html>
