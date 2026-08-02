@@ -1,6 +1,6 @@
-# MITLicense Visualizer 100 — Fase 3
+# MITLicense Visualizer 100 — Fase 4
 
 - 100 algoritmos catalogados.
-- 45 algoritmos com animação exclusiva.
-- 55 algoritmos ainda usam motores genéricos por categoria.
-- Inclui significados e possíveis casos de uso.
+- 60 algoritmos com animação exclusiva.
+- 40 algoritmos ainda usam motores genéricos por categoria.
+- Inclui nomes em português, significados e casos de uso.
