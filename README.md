@@ -1,7 +1,5 @@
-# MITLicense Visualizer 100 — Fase 6
+# MITLicense Visualizer 100 — Fase 6 corrigida
 
-- 100 algoritmos com animação própria.
-- Descrição, funcionamento, caso de uso, quando usar e quando evitar.
-- Complexidade de tempo e memória.
-- Curiosidade, área de aplicação e nível de dificuldade.
-- Nenhum campo fica vazio: todos possuem conteúdo ou fallback.
+- Corrige a cópia do catálogo usada pelo JavaScript do navegador.
+- Os cartões de descrição e caso de uso agora são preenchidos.
+- CRC e os demais algoritmos possuem todos os campos.
