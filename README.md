@@ -1,6 +1,3 @@
-# MITLicense Visualizer 100 — Fase 2
+# MITLicense Visualizer 100
 
-- 100 algoritmos catalogados.
-- 30 algoritmos com animação exclusiva.
-- 70 algoritmos ainda usam motores genéricos por categoria.
-- Pronto para Astro + Cloudflare Pages.
+Inclui nome em português, significado e caso de uso real para os 100 algoritmos.
