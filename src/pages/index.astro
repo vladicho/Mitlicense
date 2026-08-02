@@ -59,7 +59,7 @@ const algorithms = [
       .controls input[type=range] { padding:0; width:120px; min-height:auto; border:0; }
       .visual-stage { min-height:430px; padding:34px 24px 20px; display:flex; flex-direction:column; justify-content:flex-end; overflow:hidden; }
       .bars { height:310px; display:flex; align-items:flex-end; gap:clamp(3px, 1vw, 12px); border-bottom:2px solid var(--ink); padding:0 4px; }
-      .bar { flex:1; min-width:5px; background:var(--blue); border:1px solid var(--ink); position:relative; transition:height .22s ease, background .15s, transform .15s; }
+      .bar { flex:1; min-width:5px; background:var(--blue); border:1px solid var(--ink); position:relative; transition:height .6s ease, background .15s, transform .15s; }
       .bar::after { content:attr(data-value); position:absolute; top:-24px; left:50%; transform:translateX(-50%); font-size:.72rem; font-weight:900; }
       .bar.comparing { background:var(--yellow); transform:translateY(-7px); }
       .bar.active { background:var(--peach); }
