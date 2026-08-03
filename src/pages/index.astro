@@ -215,5 +215,60 @@ languageSelect.innerHTML='<option value="python">Python</option><option value="c
 const languageTemplates={java:`public static int[] executar(int[] valores) {\n    for (int fim = valores.length - 1; fim > 0; fim--) {\n        for (int i = 0; i < fim; i++) {\n            if (valores[i] > valores[i + 1]) {\n                int temp = valores[i]; valores[i] = valores[i + 1]; valores[i + 1] = temp;\n            }\n        }\n    }\n    return valores;\n}`,javascript:`function executar(valores) {\n  for (let fim = valores.length - 1; fim > 0; fim--) {\n    for (let i = 0; i < fim; i++) {\n      if (valores[i] > valores[i + 1])\n        [valores[i], valores[i + 1]] = [valores[i + 1], valores[i]];\n    }\n  }\n  return valores;\n}`,csharp:`int[] Executar(int[] valores) {\n    for (int fim = valores.Length - 1; fim > 0; fim--)\n        for (int i = 0; i < fim; i++)\n            if (valores[i] > valores[i + 1])\n                (valores[i], valores[i + 1]) = (valores[i + 1], valores[i]);\n    return valores;\n}`,go:`func executar(valores []int) []int {\n    for fim := len(valores)-1; fim > 0; fim-- {\n        for i := 0; i < fim; i++ {\n            if valores[i] > valores[i+1] {\n                valores[i], valores[i+1] = valores[i+1], valores[i]\n            }\n        }\n    }\n    return valores\n}`,rust:`fn executar(mut valores: Vec<i32>) -> Vec<i32> {\n    for fim in (1..valores.len()).rev() {\n        for i in 0..fim {\n            if valores[i] > valores[i + 1] {\n                valores.swap(i, i + 1);\n            }\n        }\n    }\n    valores\n}`,portugol:`algoritmo "ordenacao_bolha"\nvar\n   valores: vetor[1..10] de inteiro\n   i, fim, temp: inteiro\ninicio\n   para fim de 10 ate 2 passo -1 faca\n      para i de 1 ate fim - 1 faca\n         se valores[i] > valores[i + 1] entao\n            temp <- valores[i]\n            valores[i] <- valores[i + 1]\n            valores[i + 1] <- temp\n         fimse\n      fimpara\n   fimpara\nfimalgoritmo`};
 const previousLanguageUpdate=updateLanguageCode;updateLanguageCode=function(){if(cur.name==='Bubble Sort'&&languageTemplates[languageSelect.value]){codeBlock.textContent=languageTemplates[languageSelect.value];return}previousLanguageUpdate()};languageSelect.onchange=updateLanguageCode;const previousLanguageSelect=select;select=function(id){previousLanguageSelect(id);updateLanguageCode()};updateLanguageCode();
 </script>
+<script is:inline>
+const extraAlgorithms=[
+['a100','sorting','Tim Sort','O(n log n)','Combina insertion sort e merge sort para aproveitar trechos ordenados.','Python, Java e bibliotecas de ordenacao.'],
+['a101','sorting','Intro Sort','O(n log n)','Comeca como quick sort e muda de estrategia para evitar o pior caso.','C++ STL e bibliotecas de ordenacao.'],
+['a102','sorting','Bucket Sort','O(n + k)','Distribui valores em baldes e ordena cada grupo.','Processamento de dados e histogramas de imagem.'],
+['a103','sorting','Dutch National Flag','O(n)','Separa itens em tres grupos usando particionamento em uma passagem.','Particionamento de arrays e processamento de categorias.'],
+['a104','sorting','Pigeonhole Sort','O(n + range)','Coloca valores em casas correspondentes ao seu intervalo.','Listas de inteiros pequenos e sistemas educacionais.'],
+['a105','sorting','Cycle Sort','O(n²)','Minimiza o numero de escritas ao posicionar cada elemento.','Memorias flash e dispositivos com limite de escrita.'],
+['a106','sorting','Odd-Even Sort','O(n²)','Compara pares alternados e pode ser executado em paralelo.','Redes de ordenacao e exemplos de paralelismo.'],
+['a107','sorting','Bitonic Sort','O(n log² n)','Ordena sequencias bitonicas com uma rede de comparadores.','GPUs, hardware e redes de ordenacao.'],
+['a108','search','IDDFS','O(b^d)','Repete buscas em profundidade com limites crescentes.','Solucionadores de quebra-cabecas e jogos.'],
+['a109','search','Busca bidirecional','O(b^(d/2))','Busca a partir da origem e do destino ate as fronteiras se encontrarem.','Rotas e navegacao em grafos.'],
+['a110','graphs','Johnson','O(VE log V)','Repondera arestas e combina Bellman-Ford com Dijkstra.','Analise de redes e grafos esparsos.'],
+['a111','graphs','Edmonds-Karp','O(VE²)','Encontra fluxo maximo usando caminhos aumentantes por BFS.','Redes de transporte e alocacao de recursos.'],
+['a112','graphs','Dinic','O(V²E)','Usa grafo em camadas e bloqueia fluxos repetidamente.','Matching, logistica e competicoes de fluxo.'],
+['a113','graphs','Hopcroft-Karp','O(E√V)','Encontra matching maximo em grafos bipartidos.','Escalas, alocacao e sistemas de recomendacao.'],
+['a114','graphs','PageRank','O(kE)','Distribui importancia iterativamente pelas arestas de um grafo.','Buscadores, ranking de paginas e redes sociais.'],
+['a115','graphs','Pontes de Tarjan','O(V + E)','Detecta arestas cuja remocao desconecta partes do grafo.','Monitoramento de redes e analise de infraestrutura.'],
+['a116','structures','Skip List','O(log n) medio','Mantem varias camadas de listas ligadas para saltar elementos.','Redis e bancos de dados ordenados.'],
+['a117','structures','Treap','O(log n) medio','Combina propriedades de arvore de busca e heap com prioridades aleatorias.','Indices dinamicos e bibliotecas de estruturas.'],
+['a118','structures','Cuckoo Hashing','O(1) medio','Usa duas ou mais funcoes hash e move chaves em colisoes.','Tabelas hash de alta performance.'],
+['a119','structures','Count-Min Sketch','O(1) por consulta','Estima frequencias usando uma matriz compacta de contadores.','Analytics de streams, logs e telemetria.'],
+['a120','structures','HyperLogLog','O(1) por consulta','Estima a quantidade de itens distintos com pouca memoria.','Redis, analytics e contagem de usuarios.'],
+['a121','dp','Viterbi','O(T·S²)','Encontra a sequencia de estados mais provavel em um modelo.','Reconhecimento de fala e processamento de linguagem.'],
+['a122','dp','Kadane','O(n)','Mantem a melhor soma de subarray terminando em cada posicao.','Analise financeira e deteccao de picos em sinais.'],
+['a123','dp','Programacao dinamica por bitmask','O(2ⁿn)','Representa subconjuntos com bits e reutiliza estados.','Escalas, roteamento e planejamento.'],
+['a124','dp','Meet-in-the-Middle','O(2^(n/2))','Divide o problema em duas metades e combina os resultados.','Solucionadores de subset sum e busca combinatoria.'],
+['a125','dp','Exponenciacao de matrizes','O(k³ log n)','Calcula potencias de matrizes rapidamente por quadratura.','Calculadoras de Fibonacci e simulacoes discretas.'],
+['a126','strings','Suffix Automaton','O(n)','Representa todas as substrings distintas de uma cadeia.','Indexacao de textos e ferramentas de busca.'],
+['a127','strings','Boyer-Moore-Horspool','O(n) medio','Salta janelas usando o caractere final do padrao.','Editores de texto e utilitarios de busca.'],
+['a128','strings','Levenshtein otimizada','O(nm)','Calcula edicoes minimas usando apenas linhas necessarias da matriz.','Corretor ortografico e comparadores de texto.'],
+['a129','geometry','Fast Fourier Transform','O(n log n)','Converte sinais entre os dominios do tempo e da frequencia.','Audacity, processamento de audio e imagem.'],
+['a130','geometry','Miller-Rabin','O(k log³ n)','Testa primalidade com testemunhas probabilisticas.','OpenSSL, bibliotecas criptograficas e geradores de chaves.'],
+['a131','utilities','Pollard Rho','O(√p)','Fatora numeros usando uma funcao pseudoaleatoria e ciclos.','Ferramentas de teoria dos numeros e criptografia.'],
+['a132','utilities','Euclides Estendido','O(log min(a,b))','Encontra MDC e coeficientes para uma identidade linear.','RSA, inversos modulares e bibliotecas criptograficas.'],
+['a133','utilities','Exponenciacao rapida','O(log n)','Calcula potencias reduzindo o numero de multiplicacoes.','Criptografia, simulacoes e calculadoras numericas.'],
+['a134','utilities','Newton-Raphson','O(log n) tipico','Aproxima raizes usando tangentes sucessivas.','Calculadoras, CAD e simulacao cientifica.'],
+['a135','utilities','Monte Carlo','O(n)','Estima resultados por amostragem aleatoria repetida.','Blender, simuladores financeiros e jogos.'],
+['a136','utilities','K-Means','O(nki)','Agrupa pontos em k centróides iterativamente.','scikit-learn, segmentacao de clientes e imagens.'],
+['a137','geometry','RANSAC','O(k)','Encontra um modelo consistente mesmo com muitos outliers.','OpenCV, visao computacional e calibracao de cameras.'],
+['a138','geometry','Marching Cubes','O(n)','Gera uma superficie 3D a partir de voxels ou campos escalares.','Blender, engines 3D e visualizacao medica.'],
+['a139','geometry','Bresenham','O(n)','Desenha linhas inteiras usando apenas operacoes discretas.','Paint, engines 2D e rasterizadores.'],
+['a140','geometry','Curvas de Bezier','O(n)','Interpola pontos de controle para formar curvas suaves.','SVG, Figma, CAD e interfaces graficas.'],
+['a141','geometry','KD-Tree','O(log n) medio','Divide pontos por dimensoes para acelerar consultas espaciais.','Motores 3D, mapas e busca de vizinhos.'],
+['a142','geometry','R-Tree','O(log n) medio','Organiza retangulos envolventes para consultas espaciais.','PostGIS, bancos geograficos e mapas.'],
+['a143','geometry','L-System','O(n)','Gera estruturas por substituicao repetida de regras.','Fractais, simuladores de plantas e arte generativa.'],
+['a144','utilities','SHA-256','O(n)','Produz um resumo criptografico de tamanho fixo.','Git, OpenSSL, certificados e integridade de arquivos.'],
+['a145','structures','Merkle Tree','O(n) para construir','Resume folhas em hashes hierarquicos para verificar dados.','Git, blockchains e sistemas distribuidos.'],
+['a146','utilities','Fisher-Yates Streaming','O(n)','Embaralha ou amostra itens conforme eles chegam em um fluxo.','Sistemas de recomendacao e amostragem de logs.'],
+['a147','search','Aprofundamento iterativo com poda','O(b^d) pior caso','Combina limites crescentes com regras que eliminam ramos ruins.','Solucionadores de jogos e planejamento.'],
+['a148','graphs','Algoritmo de Karger','O(n² log n) esperado','Contrai arestas aleatorias para estimar um corte minimo.','Analise probabilistica de redes.'],
+['a149','utilities','Reservoir Weighted Sampling','O(n)','Mantem uma amostra ponderada de um fluxo sem armazena-lo inteiro.','Analytics de eventos, experimentos e telemetria.']
+].map(([id,category,name,complexity,meaning,realUse])=>({id,category,name,complexity,description:`Visualizacao didatica de ${name}.`,dedicated:false,portugueseName:name,meaning,realUse}));
+algorithms.push(...extraAlgorithms);document.querySelectorAll('.muted').forEach(e=>{if(e.textContent.includes('100 anima'))e.textContent='150 algoritmos · 100 animações exclusivas'});categories.extras='Mais algoritmos';const aside=document.querySelector('aside.card');if(aside){const section=document.createElement('section');section.className='cat';section.innerHTML='<h3>Mais algoritmos</h3><div class="list"></div>';const list=section.querySelector('.list');extraAlgorithms.forEach(a=>{const b=document.createElement('button');b.className='algo';b.dataset.id=a.id;b.dataset.name=a.name.toLowerCase();b.innerHTML=`<strong>${a.name}</strong><small>${a.complexity}</small><span class="tag">novo</span>`;b.addEventListener('click',()=>select(a.id));list.appendChild(b)});aside.appendChild(section)}[extraAlgorithms].flat().forEach?.(()=>{});extraAlgorithms.forEach(a=>[compareA,compareB].forEach(s=>{if(s)s.add(new Option(a.name,a.id))}));
+</script>
 </body>
 </html>
