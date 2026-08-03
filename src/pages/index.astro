@@ -394,5 +394,8 @@ const step=state=>{state.steps++;if(state.phase==='sort'){if(state.cursor>=9){st
 <script is:inline>
 (()=>{const panel=document.querySelector('.shelf-route');if(!panel)return;panel.querySelector('.shelf-route>h4')?.remove();panel.querySelector('.shelf-route>p')?.remove();panel.querySelector('.shelf-head')?.remove();panel.querySelector('.shelf-legend')?.remove();panel.querySelector('.shelf-scroll')?.remove();panel.querySelector('.shelf-status')?.remove();panel.querySelector('.scene-shelf')?.remove()})();
 </script>
+<script is:inline>
+(()=>{document.querySelectorAll('.snack-lane .snack-foods').forEach(el=>el.remove())})();
+</script>
 </body>
 </html>
