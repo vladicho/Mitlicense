@@ -414,5 +414,118 @@ const step=state=>{state.steps++;if(state.phase==='sort'){if(state.cursor>=9){st
 <script is:inline>
 (()=>{const h=document.querySelector('.snack-sim');if(!h)return;const old=h.querySelector('.compact-route');if(old)old.remove();if(h.querySelector('.stock-route'))return;const p=document.createElement('div');p.className='stock-route';p.innerHTML='<h4>Rota completa: balcao ate a prateleira e volta</h4><p>O atendente vai buscar a comida, pega no estoque e retorna ao balcao.</p><div class="stock-line"><b>A</b><span>balcao</span><div class="stock-track" id="stock-a"></div><span>prateleira</span></div><div class="stock-line"><b>B</b><span>balcao</span><div class="stock-track" id="stock-b"></div><span>prateleira</span></div><div class="stock-status" id="stock-state">Aguardando o pedido.</div>';h.appendChild(p);const tracks=[p.querySelector('#stock-a'),p.querySelector('#stock-b')];tracks.forEach((t,i)=>{for(let n=0;n<11;n++){const dot=document.createElement('span');t.appendChild(dot)}const run=document.createElement('i');run.className='stock-runner';run.textContent=i?'B':'A';t.appendChild(run)});let timer;const play=()=>{clearInterval(timer);let step=0;const state=p.querySelector('#stock-state');timer=setInterval(()=>{step++;if(step<=10){const x=step*10;tracks.forEach(t=>{t.querySelector('.stock-runner').style.left=x+'%'});state.textContent='Ida ate a prateleira: posicao '+step+' de 10.'}else{const back=step-10;const x=Math.max(0,100-back*10);tracks.forEach(t=>{t.querySelector('.stock-runner').style.left=x+'%'});state.textContent=back<10?'Pegou a comida. Retorno ao balcao: posicao '+back+' de 10.':'Pedido entregue no balcao.'}if(step>=20)clearInterval(timer)},220)};play();const button=h.querySelector('#snack-run');if(button)button.addEventListener('click',play)})();
 </script>
+<script is:inline>
+(()=>{
+const sim=document.querySelector('.snack-sim');
+if(!sim)return;
+sim.querySelector('.sticker-legend')?.remove();
+sim.querySelector('.menu-board')?.remove();
+sim.querySelector('.snack-lanes')?.remove();
+sim.querySelector('.compact-route')?.remove();
+sim.querySelector('.stock-route')?.remove();
+sim.querySelector('.shelf-route')?.remove();
+const names=['Hambúrguer artesanal','Pizza Margherita','Batata frita','Sushi vegano','Taco mexicano','Coxinha','Salada tropical','Curry indiano','Bife grelhado','Donut'];
+const foods=[
+{price:100,diet:'porcaria',type:'artesanal',prep:'bem assado',service:'mesa'},
+{price:10,diet:'vegetariana',type:'estrangeira',prep:'bem assado',service:'viagem'},
+{price:1,diet:'porcaria',type:'fast food',prep:'bem assado',service:'viagem'},
+{price:100,diet:'vegana',type:'estrangeira',prep:'bem assado',service:'viagem'},
+{price:10,diet:'porcaria',type:'estrangeira',prep:'bem assado',service:'viagem'},
+{price:1,diet:'porcaria',type:'fast food',prep:'bem assado',service:'viagem'},
+{price:10,diet:'vegana',type:'artesanal',prep:'bem assado',service:'mesa'},
+{price:100,diet:'vegana',type:'estrangeira',prep:'bem assado',service:'mesa'},
+{price:100,diet:'porcaria',type:'artesanal',prep:'mal passado',service:'mesa'},
+{price:1,diet:'vegetariana',type:'fast food',prep:'bem assado',service:'viagem'}
+];
+const fields={price:['R$ 1','R$ 10','R$ 100'],diet:['vegana','vegetariana','porcaria'],type:['fast food','estrangeira','artesanal'],prep:['mal passado','médio','bem assado'],service:['mesa','viagem']};
+const labels={price:'Valor',diet:'Calorias / alimentação',type:'Tipo',prep:'Preparo',service:'Entrega'};
+const methods={linear:'Busca linear',binary:'Busca binária',quick:'Quick Sort',merge:'Merge Sort',bubble:'Bubble Sort',tim:'Tim Sort',heap:'Heap Sort'};
+const sorted=(method,field)=>{
+const order=names.map((_,i)=>i);
+if(method==='linear')return order;
+return order.sort((a,b)=>String(foods[a][field]).localeCompare(String(foods[b][field]),'pt-BR',{numeric:true}));
+};
+const menu=document.createElement('section');
+menu.className='menu-board menu-options';
+menu.innerHTML='<div class="menu-title">CARDÁPIO — 14 opções classificáveis por comida</div><p class="menu-help">Cada linha mostra as 14 possibilidades: 3 valores + 3 alimentações + 3 tipos + 3 preparos + 2 formas de serviço. A opção real de cada comida fica marcada.</p><div class="menu-list"></div>';
+const list=menu.querySelector('.menu-list');
+names.forEach((name,i)=>{
+const d=foods[i];
+const row=document.createElement('article');
+row.className='menu-food';
+row.innerHTML='<strong>'+name+'</strong><div class="menu-option-groups"></div>';
+const groups=row.querySelector('.menu-option-groups');
+Object.keys(fields).forEach(field=>{
+const group=document.createElement('div');
+group.className='menu-option-group';
+group.innerHTML='<b>'+labels[field]+'</b>';
+fields[field].forEach(value=>{
+const option=document.createElement('span');
+option.className=String(d[field])===value||String(d[field])==='mesa'&&value==='mesa'?'selected-option':'';
+option.textContent=value;
+group.appendChild(option);
+});
+groups.appendChild(group);
+});
+list.appendChild(row);
+});
+sim.insertBefore(menu,sim.querySelector('.snack-controls'));
+const scene=document.createElement('section');
+scene.className='sort-route-scene';
+scene.innerHTML='<div class="scene-title">Rota definida pelo algoritmo</div><div class="scene-subtitle">Os dois atendentes saem do mesmo balcão, vão para estoques diferentes, pegam a mesma comida e retornam.</div><div class="route-stage"><div class="route-rack rack-a"><b>PRATELEIRA A</b><small id="rack-a-position"></small><div id="rack-a-slots" class="rack-slots"></div></div><div class="route-counter"><span class="counter-person">🧑‍🍳</span><b>BALCÃO</b><small id="route-pickup">pedido aguardando</small></div><div class="route-rack rack-b"><b>PRATELEIRA B</b><small id="rack-b-position"></small><div id="rack-b-slots" class="rack-slots"></div></div><div class="route-path path-a"><i id="route-runner-a">🏃‍♂️</i></div><div class="route-path path-b"><i id="route-runner-b">🏃‍♀️</i></div></div><div class="route-readout"><div><b id="route-label-a">Atendente A</b><span id="route-message-a">Aguardando.</span></div><div><b id="route-label-b">Atendente B</b><span id="route-message-b">Aguardando.</span></div></div><div id="sort-route-status" class="sort-route-status">Aguardando o pedido.</div>';
+sim.appendChild(scene);
+const request=sim.querySelector('#snack-request');
+const field=sim.querySelector('#snack-field');
+const methodA=sim.querySelector('#snack-a');
+const methodB=sim.querySelector('#snack-b');
+const runButton=sim.querySelector('#snack-run');
+const status=scene.querySelector('#sort-route-status');
+let timer=null;
+const drawRack=(id,order,target)=>{
+const rack=scene.querySelector(id);rack.innerHTML='';
+order.forEach((foodIndex,position)=>{
+const slot=document.createElement('span');
+slot.className=foodIndex===target?'active-slot':'';
+slot.textContent=(position+1)+'. '+names[foodIndex];
+rack.appendChild(slot);
+});
+};
+const play=()=>{
+clearInterval(timer);
+const target=Number(request.value);
+const selectedField=field.value;
+const orderA=sorted(methodA.value,selectedField);
+const orderB=sorted(methodB.value,selectedField);
+const posA=orderA.indexOf(target)+1;
+const posB=orderB.indexOf(target)+1;
+drawRack('#rack-a-slots',orderA,target);drawRack('#rack-b-slots',orderB,target);
+scene.querySelector('#rack-a-position').textContent='posição '+posA+'/10 · '+methods[methodA.value];
+scene.querySelector('#rack-b-position').textContent='posição '+posB+'/10 · '+methods[methodB.value];
+scene.querySelector('#route-label-a').textContent='A · '+methods[methodA.value];
+scene.querySelector('#route-label-b').textContent='B · '+methods[methodB.value];
+scene.querySelector('#route-runner-a').style.left='100%';scene.querySelector('#route-runner-b').style.left='0%';
+scene.querySelector('#route-message-a').textContent='Saindo do balcão.';scene.querySelector('#route-message-b').textContent='Saindo do balcão.';
+scene.querySelector('#route-pickup').textContent=names[target]+' aguardando';
+status.textContent='Sort definido: '+names[target]+' está na posição '+posA+' para A e '+posB+' para B.';
+let step=0;
+timer=setInterval(()=>{
+step++;
+const go=step<=10;
+const progress=go?step*10:Math.max(0,100-(step-10)*10);
+scene.querySelector('#route-runner-a').style.left=(100-progress)+'%';
+scene.querySelector('#route-runner-b').style.left=progress+'%';
+if(step<10){scene.querySelector('#route-message-a').textContent='Indo para a prateleira A: '+step+'/10';scene.querySelector('#route-message-b').textContent='Indo para a prateleira B: '+step+'/10';status.textContent='As rotas estão sendo percorridas conforme a ordem do sort.';}
+else if(step===10){scene.querySelector('#route-message-a').textContent='Pegou '+names[target]+' na posição '+posA+'.';scene.querySelector('#route-message-b').textContent='Pegou '+names[target]+' na posição '+posB+'.';scene.querySelector('#route-pickup').textContent=names[target]+' em transporte';status.textContent='Os dois atendentes encontraram a comida nas suas prateleiras.';}
+else if(step<20){const back=step-10;scene.querySelector('#route-message-a').textContent='Voltando ao balcão: '+back+'/10';scene.querySelector('#route-message-b').textContent='Voltando ao balcão: '+back+'/10';status.textContent='Retorno ao mesmo balcão com o pedido.';}
+else{scene.querySelector('#route-message-a').textContent='Entregue no balcão.';scene.querySelector('#route-message-b').textContent='Entregue no balcão.';scene.querySelector('#route-pickup').textContent=names[target]+' entregue';status.textContent='Comparação concluída: duas rotas, um mesmo pedido.';clearInterval(timer);}
+},180);
+};
+runButton.addEventListener('click',play);request.addEventListener('change',play);field.addEventListener('change',play);methodA.addEventListener('change',play);methodB.addEventListener('change',play);play();
+})();
+</script>
+<style is:global>
+.menu-options{margin-top:8px}.menu-help{font-size:.68rem;color:var(--m)}.menu-list{display:grid;gap:6px}.menu-food{padding:7px 0;border-top:1px solid #f4d58c33}.menu-food>strong{display:block;color:#fff3c9;font-size:.7rem;margin-bottom:5px}.menu-option-groups{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}.menu-option-group{display:flex;flex-wrap:wrap;gap:2px;align-content:start}.menu-option-group b{width:100%;color:#bba984;font-size:.55rem}.menu-option-group span{padding:2px 3px;border-radius:4px;background:#172338;color:#aab8d0;font-size:.52rem}.menu-option-group span.selected-option{background:#2dd4bf44;color:#e4fffb;border:1px solid #9af5eb99}@media(max-width:700px){.menu-option-groups{grid-template-columns:repeat(2,1fr)}}
+.sort-route-scene{margin-top:10px;padding:10px;border-top:1px solid var(--l)}.scene-title{color:var(--t);font-size:.82rem;font-weight:700}.scene-subtitle{margin:4px 0 8px;color:var(--m);font-size:.68rem}.route-stage{position:relative;height:210px;overflow:hidden;border:1px solid #9af5eb55;border-radius:10px;background:linear-gradient(#172338 0 70%,#392c25 70%)}.route-rack{position:absolute;top:22px;width:25%;height:120px;padding:6px;border:3px solid #8b5e3c;border-radius:6px;background:#5a3928;color:#f4d58c;font-size:.58rem}.rack-a{left:2%}.rack-b{right:2%}.route-rack>b,.route-rack>small{display:block;text-align:center}.route-rack>small{margin:3px 0;color:#ffe39a;font-size:.52rem}.rack-slots{display:grid;grid-template-columns:1fr 1fr;gap:2px}.rack-slots span{overflow:hidden;padding:3px;border-radius:3px;background:#261a15;color:#d8c2a5;white-space:nowrap;text-overflow:ellipsis;font-size:.48rem}.rack-slots span.active-slot{background:#f4b942;color:#261900}.route-counter{position:absolute;left:37%;right:37%;bottom:28px;height:56px;padding:6px;border:4px solid #7a4b2d;border-radius:8px 8px 3px 3px;background:#b87945;color:#fff0d0;text-align:center;font-size:.58rem}.counter-person{position:absolute;top:-30px;left:calc(50% - 12px);font-size:1.55rem}.route-counter b,.route-counter small{display:block}.route-counter small{margin-top:5px;overflow:hidden;color:#f4d58c;white-space:nowrap;text-overflow:ellipsis}.route-path{position:absolute;top:160px;width:37%;height:5px;border-radius:4px;background:#8b9ab7aa}.path-a{left:27%}.path-b{right:27%}.route-path i{position:absolute;top:-17px;font-size:1.2rem;font-style:normal;transition:left .18s linear}.route-readout{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}.route-readout div{padding:6px;border-radius:6px;background:#0b111b;font-size:.62rem}.route-readout b,.route-readout span{display:block}.route-readout b{color:#9af5eb}.route-readout div+div b{color:#d7a7ff}.route-readout span{margin-top:3px;color:var(--m)}.sort-route-status{margin-top:7px;padding:7px;border-radius:7px;background:#0b111b;color:#9af5eb;font-size:.68rem}@media(max-width:500px){.route-stage{height:230px}.route-rack{width:31%;height:130px}.rack-a{left:1%}.rack-b{right:1%}.route-counter{left:35%;right:35%;bottom:28px}.path-a{left:30%;width:23%}.path-b{right:30%;width:23%}.menu-option-groups{grid-template-columns:1fr 1fr}}
+</style>
 </body>
 </html>
