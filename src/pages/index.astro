@@ -392,7 +392,7 @@ const step=state=>{state.steps++;if(state.phase==='sort'){if(state.cursor>=9){st
 <style is:global>.menu-board{margin:8px 0;padding:10px;border:1px solid #f4d58c88;border-radius:10px;background:linear-gradient(135deg,#382a18,#171b26);color:#f9e7b0}.menu-title{padding-bottom:7px;border-bottom:1px solid #f4d58c55;font-size:.78rem;font-weight:700;letter-spacing:.04em}.menu-columns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.menu-columns div{display:grid;gap:4px}.menu-columns b{color:#fff3c9;font-size:.68rem}.menu-columns span{display:flex;justify-content:space-between;gap:6px;color:#e5d7b5;font-size:.65rem}.menu-columns strong{color:#9af5eb;font-weight:600}.menu-board>small{display:block;margin-top:8px;color:#bba984;font-size:.62rem}.snack-card .food-stickers{display:block;padding:4px 0;background:transparent}.snack-card .food-stickers .menu-detail{display:block;padding:3px 0;color:#c7d4ed;background:transparent;font-size:.58rem;white-space:normal}.snack-card.snack-check .food-stickers .menu-detail,.snack-card.snack-found .food-stickers .menu-detail{background:transparent;color:inherit}@media(max-width:500px){.menu-columns{grid-template-columns:1fr}}
 </style>
 <script is:inline>
-(()=>{document.querySelector('.shelf-route')?.remove()})();
+(()=>{const panel=document.querySelector('.shelf-route');if(!panel)return;panel.querySelector('.shelf-route>h4')?.remove();panel.querySelector('.shelf-route>p')?.remove();panel.querySelector('.shelf-head')?.remove();panel.querySelector('.shelf-legend')?.remove();panel.querySelector('.shelf-scroll')?.remove();panel.querySelector('.shelf-status')?.remove();panel.querySelector('.scene-shelf')?.remove()})();
 </script>
 </body>
 </html>
