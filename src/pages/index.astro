@@ -283,5 +283,62 @@ const completeSelect=select;select=function(id){completeSelect(id);const a=algor
 <script is:inline>
 algorithms.forEach(a=>{if(!a.timeComplexity||a.timeComplexity==='Ver detalhes')a.timeComplexity=a.category==='sorting'?'Varia conforme a estrategia; frequentemente O(n log n) ou O(n²).':a.category==='search'?'Varia de O(1) a O(n), conforme a estrutura.':'Varia conforme a estrutura e o tamanho da entrada.';if(!a.spaceComplexity||a.spaceComplexity==='Varia conforme o metodo e o tamanho da saida.')a.spaceComplexity=completeDefaults[a.category]?.space||'Varia conforme a estrutura auxiliar.'});select(cur.id);
 </script>
+<style is:global>.complexity-guide{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--l)}.complexity-guide .guide-box{padding:12px;border:1px solid var(--l);border-radius:12px;background:#101722}.complexity-guide h4{margin:0 0 5px;font-size:.82rem}.complexity-guide p{margin:0;color:var(--m);font-size:.8rem;line-height:1.45}.complexity-scale{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.complexity-scale span{font-size:.7rem;padding:4px 7px;border-radius:999px}.c-fast{color:#8ef0c0;background:#34c77b22}.c-good{color:#9af5eb;background:#2dd4bf22}.c-warn{color:#f4d58c;background:#f4b94222}.c-slow{color:#ff9a9f;background:#ef5f6722}@media(max-width:700px){.complexity-guide{grid-template-columns:1fr}}
+</style>
+<script is:inline>
+const guide=document.createElement('div');guide.className='complexity-guide';guide.innerHTML='<div class="guide-box"><h4>⏱️ Time Complexity</h4><p>Mostra como a quantidade de operacoes cresce quando a entrada aumenta. O(n) dobra aproximadamente quando os dados dobram; O(n²) pode quadruplicar.</p><div class="complexity-scale"><span class="c-fast">O(1) constante</span><span class="c-good">O(log n) excelente</span><span class="c-warn">O(n) linear</span><span class="c-slow">O(n²) pesado</span></div></div><div class="guide-box"><h4>💾 Space Complexity</h4><p>Mostra a memoria extra usada alem da entrada. O(1) usa espaco fixo; O(n) cresce junto com a quantidade de dados.</p><div class="complexity-scale"><span class="c-fast">O(1) memoria fixa</span><span class="c-warn">O(n) memoria auxiliar</span></div></div>';const guideTarget=document.querySelector('.details-card');if(guideTarget&&!guideTarget.querySelector('.complexity-guide'))guideTarget.appendChild(guide);
+const extraStages={
+'Tim Sort':['Identificando runs ja ordenados.','Ordenando pequenos runs com insertion sort.','Dividindo os runs em blocos.','Intercalando blocos adjacentes.','Lista ordenada com estabilidade.'],
+'Intro Sort':['Iniciando particionamento quick sort.','Avaliando a profundidade da recursao.','Mudando para heap sort por seguranca.','Ajustando o heap restante.','Ordenacao finalizada.'],
+'Bucket Sort':['Criando baldes pelo intervalo.','Distribuindo valores nos baldes.','Ordenando cada balde localmente.','Concatenando os baldes.','Lista ordenada.'],
+'Dutch National Flag':['Escolhendo as tres regioes.','Movendo valores menores para a esquerda.','Mantendo valores iguais no centro.','Movendo valores maiores para a direita.','Particionamento concluido.'],
+'Pigeonhole Sort':['Criando casas para o intervalo.','Colocando cada valor na casa correspondente.','Lendo as casas em ordem.','Reconstruindo a lista.','Ordenacao concluida.'],
+'Cycle Sort':['Calculando a posicao final do item.','Contando valores menores.','Escrevendo o item no ciclo.','Avancando para o proximo ciclo.','Menor numero de escritas atingido.'],
+'Odd-Even Sort':['Comparando pares em indices impares.','Trocando pares fora de ordem.','Comparando pares em indices pares.','Repetindo ate nao haver trocas.','Rede odd-even concluida.'],
+'Bitonic Sort':['Construindo sequencia bitonica.','Ordenando metade crescente.','Ordenando metade decrescente.','Aplicando comparadores bitonicos.','Sequencia ordenada.'],
+'IDDFS':['Definindo limite de profundidade.','Explorando caminhos ate o limite.','Aumentando o limite.','Repetindo a busca em profundidade.','Alvo localizado ou espaco esgotado.'],
+'Busca bidirecional':['Iniciando pela origem.','Iniciando pelo destino.','Expandindo as duas fronteiras.','Comparando vertices visitados.','Fronteiras se encontraram.'],
+'Johnson':['Executando Bellman-Ford para reponderar.','Removendo efeitos de pesos negativos.','Executando Dijkstra a partir de cada vertice.','Atualizando distancias entre pares.','Todas as distancias calculadas.'],
+'Edmonds-Karp':['Procurando caminho aumentante com BFS.','Calculando gargalo do caminho.','Aumentando o fluxo residual.','Atualizando arestas reversas.','Fluxo maximo encontrado.'],
+'Dinic':['Construindo grafo em camadas.','Encontrando caminhos bloqueantes.','Enviando fluxo pelo nivel atual.','Atualizando a rede residual.','Fase de fluxo concluida.'],
+'Hopcroft-Karp':['Criando camadas do matching.','Procurando caminhos aumentantes curtos.','Aumentando varios pares em paralelo.','Atualizando vertices livres.','Matching maximo encontrado.'],
+'PageRank':['Distribuindo pontuacao inicial.','Seguindo links de cada pagina.','Aplicando fator de amortecimento.','Repetindo ate estabilizar.','Ranking convergiu.'],
+'Pontes de Tarjan':['Executando DFS no grafo.','Registrando tempo de descoberta.','Calculando low-link dos vizinhos.','Testando arestas criticas.','Pontes identificadas.'],
+'Skip List':['Criando o nivel inferior.','Sorteando niveis de atalho.','Avancando pelos ponteiros superiores.','Inserindo o novo elemento.','Skip list atualizada.'],
+'Treap':['Inserindo chave na arvore.','Atribuindo prioridade aleatoria.','Subindo o no por rotacoes.','Mantendo ordem e propriedade de heap.','Treap balanceada.'],
+'Cuckoo Hashing':['Calculando a primeira posicao hash.','Testando a segunda posicao.','Expulsando uma chave em colisao.','Reinserindo a chave deslocada.','Tabela hash atualizada.'],
+'Count-Min Sketch':['Inicializando contadores.','Calculando varias funcoes hash.','Incrementando as linhas correspondentes.','Consultando a menor contagem.','Frequencia estimada.'],
+'HyperLogLog':['Dividindo o hash em bucket e rank.','Registrando o maior rank observado.','Combinando estimativas dos buckets.','Aplicando correcao estatistica.','Cardinalidade estimada.'],
+'Viterbi':['Criando estados iniciais.','Calculando probabilidades de transicao.','Guardando o melhor predecessor.','Voltando pela melhor sequencia.','Sequencia mais provavel encontrada.'],
+'Kadane':['Iniciando soma local.','Adicionando o proximo elemento.','Recomecando quando a soma piora.','Atualizando o melhor intervalo.','Maior soma encontrada.'],
+'Programacao dinamica por bitmask':['Criando estado vazio.','Adicionando um elemento ao subconjunto.','Reutilizando estados anteriores.','Comparando as combinacoes.','Melhor estado encontrado.'],
+'Meet-in-the-Middle':['Dividindo a entrada em duas metades.','Gerando somas da primeira metade.','Gerando somas da segunda metade.','Combinando somas complementares.','Solucao encontrada.'],
+'Exponenciacao de matrizes':['Iniciando matriz identidade.','Elevando a matriz ao quadrado.','Selecionando bits do expoente.','Multiplicando matrizes relevantes.','Potencia calculada.'],
+'Suffix Automaton':['Criando estado inicial.','Adicionando caracteres ao automato.','Clonando estado quando necessario.','Atualizando transicoes de sufixo.','Automato de substrings pronto.'],
+'Boyer-Moore-Horspool':['Alinhando o padrao.','Consultando a tabela de saltos.','Comparando pela ultima letra.','Saltando a janela incompatível.','Padrao encontrado ou esgotado.'],
+'Levenshtein otimizada':['Inicializando a primeira linha.','Calculando insercao, remocao e troca.','Mantendo apenas duas linhas.','Atualizando a distancia parcial.','Distancia final calculada.'],
+'Fast Fourier Transform':['Separando indices pares e impares.','Calculando transformadas menores.','Aplicando fatores de rotacao.','Combinando resultados.','Transformada concluida.'],
+'Miller-Rabin':['Escolhendo testemunhas.','Escrevendo n menos um como 2^s vezes d.','Calculando potencia modular.','Testando testemunha forte.','Primalidade estimada.'],
+'Pollard Rho':['Gerando sequencia pseudoaleatoria.','Avancando ponteiro rapido e lento.','Calculando MDC da diferenca.','Encontrando um fator nao trivial.','Fatoracao parcial concluida.'],
+'Euclides Estendido':['Dividindo os coeficientes.','Guardando quociente e resto.','Voltando pela cadeia de divisoes.','Calculando coeficientes de Bezout.','MDC e inverso encontrados.'],
+'Exponenciacao rapida':['Lendo o bit menos significativo.','Multiplicando o resultado quando necessario.','Elevando a base ao quadrado.','Reduzindo o expoente pela metade.','Potencia final calculada.'],
+'Newton-Raphson':['Escolhendo aproximacao inicial.','Calculando a funcao no ponto atual.','Calculando a derivada.','Avancando pela tangente.','Raiz aproximada encontrada.'],
+'Monte Carlo':['Gerando amostras aleatorias.','Classificando cada amostra.','Acumulando resultados favoraveis.','Atualizando a estimativa.','Estimativa final calculada.'],
+'K-Means':['Escolhendo centroides iniciais.','Atribuindo pontos ao centro mais proximo.','Recalculando centroides.','Repetindo ate estabilizar.','Clusters formados.'],
+'RANSAC':['Escolhendo uma amostra minima.','Estimando um modelo.','Contando pontos consistentes.','Repetindo com outra amostra.','Melhor modelo selecionado.'],
+'Marching Cubes':['Lendo os oito vertices do voxel.','Consultando a configuracao da superficie.','Interpolando pontos nas arestas.','Montando triangulos.','Malha 3D gerada.'],
+'Bresenham':['Calculando diferencas da linha.','Escolhendo o proximo pixel.','Atualizando o erro acumulado.','Marcando pixels intermediarios.','Linha rasterizada.'],
+'Curvas de Bezier':['Lendo pontos de controle.','Interpolando entre pontos vizinhos.','Aplicando de Casteljau.','Gerando pontos da curva.','Curva suave concluida.'],
+'KD-Tree':['Escolhendo a dimensao de corte.','Ordenando pontos pelo eixo atual.','Criando o no mediano.','Descendo para o lado promissor.','Consulta espacial concluida.'],
+'R-Tree':['Criando retangulos envolventes.','Escolhendo o ramo com menor aumento.','Dividindo um no cheio.','Atualizando retangulos ancestrais.','Indice espacial atualizado.'],
+'L-System':['Iniciando o axioma.','Aplicando regras de substituicao.','Gerando a proxima iteracao.','Interpretando comandos geometricos.','Estrutura fractal desenhada.'],
+'SHA-256':['Inicializando constantes do hash.','Preenchendo o bloco de mensagem.','Expandindo palavras do bloco.','Executando rodadas de mistura.','Resumo SHA-256 gerado.'],
+'Merkle Tree':['Criando hashes das folhas.','Combinando pares de hashes.','Subindo para o nivel pai.','Calculando a raiz Merkle.','Integridade da arvore verificada.'],
+'Fisher-Yates Streaming':['Lendo o proximo item do fluxo.','Calculando a chance de entrada.','Substituindo um item do reservatorio.','Mantendo a amostra uniforme.','Amostra do fluxo concluida.'],
+'Aprofundamento iterativo com poda':['Escolhendo limite e restricoes.','Expandindo um ramo promissor.','Cortando ramo incompatível.','Aumentando o limite de busca.','Solucao encontrada ou busca encerrada.'],
+'Algoritmo de Karger':['Escolhendo uma aresta aleatoria.','Contraindo os vertices da aresta.','Removendo lacos criados.','Repetindo ate restarem dois grupos.','Corte candidato calculado.'],
+'Reservoir Weighted Sampling':['Lendo peso do proximo item.','Atualizando o peso total.','Calculando probabilidade de entrada.','Substituindo um item ponderado.','Amostra ponderada concluida.']};
+const baseExtraBuild=build;build=function(){const stages=extraStages[cur.name];if(!stages)return baseExtraBuild();const n=Math.max(vals.length,10),out=[];stages.forEach((text,i)=>{const active=[(i*2)%n,((i*2)+1)%n];out.push({active,done:Array.from({length:Math.min(i,n)},(_,k)=>k),text})});out.push({done:Array.from({length:n},(_,k)=>k),text:`${cur.name} concluido.`});return out};extraAlgorithms.forEach(a=>a.dedicated=true);select(cur.id);
+</script>
 </body>
 </html>
