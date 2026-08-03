@@ -527,5 +527,81 @@ runButton.addEventListener('click',play);request.addEventListener('change',play)
 .menu-options{margin-top:8px}.menu-help{font-size:.68rem;color:var(--m)}.menu-list{display:grid;gap:6px}.menu-food{padding:7px 0;border-top:1px solid #f4d58c33}.menu-food>strong{display:block;color:#fff3c9;font-size:.7rem;margin-bottom:5px}.menu-option-groups{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}.menu-option-group{display:flex;flex-wrap:wrap;gap:2px;align-content:start}.menu-option-group b{width:100%;color:#bba984;font-size:.55rem}.menu-option-group span{padding:2px 3px;border-radius:4px;background:#172338;color:#aab8d0;font-size:.52rem}.menu-option-group span.selected-option{background:#2dd4bf44;color:#e4fffb;border:1px solid #9af5eb99}@media(max-width:700px){.menu-option-groups{grid-template-columns:repeat(2,1fr)}}
 .sort-route-scene{margin-top:10px;padding:10px;border-top:1px solid var(--l)}.scene-title{color:var(--t);font-size:.82rem;font-weight:700}.scene-subtitle{margin:4px 0 8px;color:var(--m);font-size:.68rem}.route-stage{position:relative;height:210px;overflow:hidden;border:1px solid #9af5eb55;border-radius:10px;background:linear-gradient(#172338 0 70%,#392c25 70%)}.route-rack{position:absolute;top:22px;width:25%;height:120px;padding:6px;border:3px solid #8b5e3c;border-radius:6px;background:#5a3928;color:#f4d58c;font-size:.58rem}.rack-a{left:2%}.rack-b{right:2%}.route-rack>b,.route-rack>small{display:block;text-align:center}.route-rack>small{margin:3px 0;color:#ffe39a;font-size:.52rem}.rack-slots{display:grid;grid-template-columns:1fr 1fr;gap:2px}.rack-slots span{overflow:hidden;padding:3px;border-radius:3px;background:#261a15;color:#d8c2a5;white-space:nowrap;text-overflow:ellipsis;font-size:.48rem}.rack-slots span.active-slot{background:#f4b942;color:#261900}.route-counter{position:absolute;left:37%;right:37%;bottom:28px;height:56px;padding:6px;border:4px solid #7a4b2d;border-radius:8px 8px 3px 3px;background:#b87945;color:#fff0d0;text-align:center;font-size:.58rem}.counter-person{position:absolute;top:-30px;left:calc(50% - 12px);font-size:1.55rem}.route-counter b,.route-counter small{display:block}.route-counter small{margin-top:5px;overflow:hidden;color:#f4d58c;white-space:nowrap;text-overflow:ellipsis}.route-path{position:absolute;top:160px;width:37%;height:5px;border-radius:4px;background:#8b9ab7aa}.path-a{left:27%}.path-b{right:27%}.route-path i{position:absolute;top:-17px;font-size:1.2rem;font-style:normal;transition:left .18s linear}.route-readout{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}.route-readout div{padding:6px;border-radius:6px;background:#0b111b;font-size:.62rem}.route-readout b,.route-readout span{display:block}.route-readout b{color:#9af5eb}.route-readout div+div b{color:#d7a7ff}.route-readout span{margin-top:3px;color:var(--m)}.sort-route-status{margin-top:7px;padding:7px;border-radius:7px;background:#0b111b;color:#9af5eb;font-size:.68rem}@media(max-width:500px){.route-stage{height:230px}.route-rack{width:31%;height:130px}.rack-a{left:1%}.rack-b{right:1%}.route-counter{left:35%;right:35%;bottom:28px}.path-a{left:30%;width:23%}.path-b{right:30%;width:23%}.menu-option-groups{grid-template-columns:1fr 1fr}}
 </style>
+<script is:inline>
+(()=>{
+const sim=document.querySelector('.snack-sim');
+if(!sim)return;
+sim.querySelector('.sort-route-scene')?.remove();
+sim.querySelector('.snack-controls label:first-child')?.remove();
+const names=['Hambúrguer artesanal','Pizza Margherita','Batata frita','Sushi vegano','Taco mexicano','Coxinha','Salada tropical','Curry indiano','Bife grelhado','Donut'];
+const values=[100,10,1,100,10,1,10,100,100,1];
+const diet=['porcaria','vegetariana','porcaria','vegana','porcaria','porcaria','vegana','vegana','porcaria','vegetariana'];
+const type=['artesanal','estrangeira','fast food','estrangeira','estrangeira','fast food','artesanal','estrangeira','artesanal','fast food'];
+const methods={linear:'Busca linear',binary:'Busca binária',quick:'Quick Sort',merge:'Merge Sort',bubble:'Bubble Sort',tim:'Tim Sort',heap:'Heap Sort'};
+const orderFor=(method,field)=>{
+const order=names.map((_,i)=>i);
+if(method==='linear')return order;
+return order.sort((a,b)=>{
+if(field==='price')return values[a]-values[b];
+if(field==='diet')return diet[a].localeCompare(diet[b],'pt-BR');
+return type[a].localeCompare(type[b],'pt-BR');
+});
+};
+const scene=document.createElement('section');
+scene.className='batch-route-scene';
+scene.innerHTML='<div class="scene-title">10 comidas organizadas em 2 prateleiras de 140 posições</div><div class="scene-subtitle">O mesmo lote sai do balcão. Cada atendente segue a ordem produzida pelo seu algoritmo, acende a posição encontrada e volta.</div><div class="batch-stage"><div class="batch-shelf shelf-left"><b id="batch-title-a">PRATELEIRA A</b><small id="batch-info-a"></small><div id="batch-grid-a" class="batch-grid"></div></div><div class="batch-counter"><span>🧑‍🍳</span><b>BALCÃO</b><small id="batch-counter-state">10 comidas aguardando</small></div><div class="batch-shelf shelf-right"><b id="batch-title-b">PRATELEIRA B</b><small id="batch-info-b"></small><div id="batch-grid-b" class="batch-grid"></div></div><div class="batch-path path-left"><i id="batch-runner-a">🏃‍♂️</i></div><div class="batch-path path-right"><i id="batch-runner-b">🏃‍♀️</i></div></div><div class="batch-readout"><div><b id="batch-label-a">A</b><span id="batch-message-a">Aguardando.</span></div><div><b id="batch-label-b">B</b><span id="batch-message-b">Aguardando.</span></div></div><div id="batch-status" class="batch-status">Preparando as duas prateleiras.</div>';
+sim.appendChild(scene);
+const field=sim.querySelector('#snack-field');
+const methodA=sim.querySelector('#snack-a');
+const methodB=sim.querySelector('#snack-b');
+const run=sim.querySelector('#snack-run');
+const slots=[6,20,34,48,62,76,90,104,118,132];
+let timer=null;
+const grid=(id,order)=>{
+const el=scene.querySelector(id);el.innerHTML='';
+for(let i=0;i<140;i++){
+const cell=document.createElement('span');cell.className='batch-cell';cell.dataset.slot=i;
+const p=slots.indexOf(i);
+if(p>=0)cell.dataset.food=String(order[p]);
+cell.setAttribute('aria-label',p>=0?names[order[p]]:'posição vazia');
+el.appendChild(cell);
+}
+};
+const clearGlow=()=>scene.querySelectorAll('.batch-cell').forEach(x=>x.classList.remove('picked','current'));
+const glow=(id,food,kind)=>{const cell=scene.querySelector(id+' [data-food="'+food+'"]');if(cell)cell.classList.add(kind);};
+const setup=()=>{
+const fieldName=field.value;
+const a=orderFor(methodA.value,fieldName),b=orderFor(methodB.value,fieldName);
+grid('#batch-grid-a',a);grid('#batch-grid-b',b);clearGlow();
+scene.querySelector('#batch-title-a').textContent='PRATELEIRA A · '+methods[methodA.value];
+scene.querySelector('#batch-title-b').textContent='PRATELEIRA B · '+methods[methodB.value];
+scene.querySelector('#batch-info-a').textContent='140 quadrados · 10 posições ocupadas';
+scene.querySelector('#batch-info-b').textContent='140 quadrados · 10 posições ocupadas';
+scene.querySelector('#batch-label-a').textContent='Atendente A · '+methods[methodA.value];
+scene.querySelector('#batch-label-b').textContent='Atendente B · '+methods[methodB.value];
+return [a,b];
+};
+const play=()=>{
+clearInterval(timer);const orders=setup(),a=orders[0],b=orders[1];let tick=0;
+const runnerA=scene.querySelector('#batch-runner-a'),runnerB=scene.querySelector('#batch-runner-b');
+runnerA.style.left='100%';runnerB.style.left='0%';
+scene.querySelector('#batch-counter-state').textContent='10 comidas aguardando';
+timer=setInterval(()=>{
+const item=Math.floor(tick/9),phase=tick%9;
+if(item>=10){clearInterval(timer);scene.querySelector('#batch-status').textContent='Lote completo: as 10 comidas voltaram ao balcão.';scene.querySelector('#batch-message-a').textContent='Entregou as 10 comidas.';scene.querySelector('#batch-message-b').textContent='Entregou as 10 comidas.';scene.querySelector('#batch-counter-state').textContent='10 comidas entregues';return;}
+const foodA=a[item],foodB=b[item];
+if(phase===0){scene.querySelectorAll('.batch-cell.current').forEach(x=>x.classList.remove('current'));scene.querySelector('#batch-status').textContent='Atendentes saindo do mesmo balcão para buscar a comida '+(item+1)+' de 10.';}
+if(phase<=3){const progress=(phase+1)*25;runnerA.style.left=(100-progress)+'%';runnerB.style.left=progress+'%';scene.querySelector('#batch-message-a').textContent='Indo para a prateleira A: '+(item+1)+'/10';scene.querySelector('#batch-message-b').textContent='Indo para a prateleira B: '+(item+1)+'/10';}
+if(phase===4){glow('#batch-grid-a',String(foodA),'current');glow('#batch-grid-b',String(foodB),'current');scene.querySelector('#batch-status').textContent='Pegando '+names[foodA]+' na A e '+names[foodB]+' na B.';scene.querySelector('#batch-message-a').textContent='Pegou a posição iluminada.';scene.querySelector('#batch-message-b').textContent='Pegou a posição iluminada.';}
+if(phase>=5){const back=(phase-4)*25;runnerA.style.left=back+'%';runnerB.style.left=(100-back)+'%';scene.querySelector('#batch-message-a').textContent='Voltando ao balcão: '+(item+1)+'/10';scene.querySelector('#batch-message-b').textContent='Voltando ao balcão: '+(item+1)+'/10';if(phase===8){const doneA=scene.querySelector('#batch-grid-a [data-food="'+foodA+'"]');const doneB=scene.querySelector('#batch-grid-b [data-food="'+foodB+'"]');if(doneA)doneA.classList.remove('current');if(doneB)doneB.classList.remove('current');glow('#batch-grid-a',String(foodA),'picked');glow('#batch-grid-b',String(foodB),'picked');}}
+tick++;
+},180);
+};
+run.addEventListener('click',play);field.addEventListener('change',play);methodA.addEventListener('change',play);methodB.addEventListener('change',play);play();
+})();
+</script>
+<style is:global>
+.batch-route-scene{margin-top:10px;padding:10px;border-top:1px solid var(--l)}.batch-route-scene .scene-subtitle{margin:4px 0 8px;color:var(--m);font-size:.68rem}.batch-stage{position:relative;height:300px;overflow:hidden;border:1px solid #9af5eb55;border-radius:10px;background:linear-gradient(#172338 0 78%,#392c25 78%)}.batch-shelf{position:absolute;top:10px;width:37%;height:218px;padding:6px;border:4px solid #8b5e3c;border-radius:6px;background:#5a3928;color:#f4d58c;font-size:.57rem}.shelf-left{left:1%}.shelf-right{right:1%}.batch-shelf>b,.batch-shelf>small{display:block;text-align:center}.batch-shelf>small{margin:3px 0;color:#ffe39a;font-size:.5rem}.batch-grid{display:grid;grid-template-columns:repeat(14,1fr);grid-template-rows:repeat(10,1fr);gap:2px;height:184px;padding:4px;border:2px solid #9d6d48;background:#261a15}.batch-cell{min-width:0;border:1px solid #ffffff22;border-radius:2px;background:#172338;transition:background .16s,box-shadow .16s,transform .16s}.batch-cell.current{background:#f4b942;box-shadow:0 0 9px 3px #ffe39a;transform:scale(1.18);position:relative;z-index:2}.batch-cell.picked{background:#34c77b;box-shadow:0 0 7px 2px #9af5eb}.batch-counter{position:absolute;left:39%;right:39%;bottom:24px;height:54px;padding:6px;border:4px solid #7a4b2d;border-radius:8px 8px 3px 3px;background:#b87945;color:#fff0d0;text-align:center;font-size:.58rem}.batch-counter>span{position:absolute;top:-30px;left:calc(50% - 12px);font-size:1.5rem}.batch-counter b,.batch-counter small{display:block}.batch-counter small{margin-top:5px;overflow:hidden;color:#f4d58c;white-space:nowrap;text-overflow:ellipsis}.batch-path{position:absolute;top:255px;width:38%;height:5px;border-radius:5px;background:#8b9ab7aa}.path-left{left:25%}.path-right{right:25%}.batch-path i{position:absolute;top:-18px;font-size:1.2rem;font-style:normal;transition:left .16s linear}.batch-readout{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}.batch-readout div{padding:6px;border-radius:6px;background:#0b111b;font-size:.62rem}.batch-readout b,.batch-readout span{display:block}.batch-readout b{color:#9af5eb}.batch-readout div+div b{color:#d7a7ff}.batch-readout span{margin-top:3px;color:var(--m)}.batch-status{margin-top:7px;padding:7px;border-radius:7px;background:#0b111b;color:#9af5eb;font-size:.68rem}@media(max-width:600px){.batch-stage{height:330px}.batch-shelf{width:43%;height:225px}.shelf-left{left:1%}.shelf-right{right:1%}.batch-grid{height:190px}.batch-counter{left:35%;right:35%;bottom:25px}.path-left{left:30%;width:22%}.path-right{right:30%;width:22%}.batch-path{top:285px}}
+</style>
 </body>
 </html>
