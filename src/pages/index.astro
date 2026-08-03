@@ -784,5 +784,14 @@ const run=()=>{timers.forEach(clearInterval);timers=[];const foods=selected(),pa
 scene.querySelector('#custom-order-run').addEventListener('click',run);scene.querySelectorAll('.food-choice').forEach(x=>x.addEventListener('change',()=>{updateMenu();resetPreview()}));scene.querySelectorAll('.coord-input').forEach(x=>x.addEventListener('change',resetPreview));scene.querySelector('#custom-method-a').value='bubble';scene.querySelector('#custom-method-b').value='quick';updateMenu();resetPreview();
 })();
 </script>
+<style is:global>
+.sort-cluster-scene .custom-order-grid .batch-cell.target-slot{background:#f4b942!important;box-shadow:0 0 10px 4px #ffe39a, inset 0 0 7px #fff2a8!important;animation:target-pulse .7s ease-in-out infinite alternate}.sort-cluster-scene .custom-order-grid .batch-cell.target-slot::after{content:'⬆';display:block;color:#fff6b0;font-size:.55rem;text-align:center;line-height:1.4}@keyframes target-pulse{from{filter:brightness(1);transform:scale(1)}to{filter:brightness(1.55);transform:scale(1.14)}}.sort-cluster-scene .custom-order-confirmed{color:#9af5eb!important}
+</style>
+<script is:inline>
+(()=>{const scene=document.querySelector('.sort-cluster-scene');if(!scene)return;const actions=scene.querySelector('.builder-actions'),run=scene.querySelector('#custom-order-run'),validation=scene.querySelector('#custom-validation'),status=scene.querySelector('#custom-status');if(!actions||!run)return;const orderButton=document.createElement('button');orderButton.type='button';orderButton.className='btn';orderButton.id='custom-order-confirm';orderButton.textContent='Fazer pedido pelo cardápio';actions.insertBefore(orderButton,run);orderButton.addEventListener('click',()=>{const choices=scene.querySelectorAll('.food-choice:checked').length;if(choices!==10){validation.textContent=`Selecione exatamente 10 comidas (agora: ${choices}).`;status.textContent='O pedido não foi enviado: escolha as 10 comidas no cardápio.';return}orderButton.textContent='Pedido feito ✓';orderButton.classList.add('custom-order-confirmed');validation.textContent='Pedido feito com 10 comidas. Agora confira as coordenadas e execute.';status.textContent='Pedido recebido no balcão. Aguardando a organização pelas duas lanchonetes.'});run.addEventListener('click',()=>{if(scene.querySelector('#custom-order-confirm')&&!scene.querySelector('#custom-order-confirm').classList.contains('custom-order-confirmed')){orderButton.click()}})})();
+</script>
+<script is:inline>
+(()=>{const style=document.createElement('style');style.textContent='.sort-cluster-scene .custom-order-grid .batch-cell.target-slot{background:#f4b942!important;box-shadow:0 0 10px 4px #ffe39a,inset 0 0 7px #fff2a8!important;animation:target-pulse .7s ease-in-out infinite alternate}@keyframes target-pulse{from{filter:brightness(1);transform:scale(1)}to{filter:brightness(1.55);transform:scale(1.14)}}';document.head.appendChild(style)})();
+</script>
 </body>
 </html>
